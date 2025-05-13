@@ -1,18 +1,19 @@
 package food_project;
 
 public class MemberDTO {
-	private String id;
+	private String member_id;
 	private String pwd;
 	private String name;
 	private String birth;
 	private String tel;
 	private String email;
 	
-	public String getId() {
-		return id;
+
+	public String getMember_id() {
+		return member_id;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setMember_id(String member_id) {
+		this.member_id = member_id;
 	}
 	public String getPwd() {
 		return pwd;

@@ -13,8 +13,8 @@ import db.util.DBUtil;
 public class OwnerDAO {
 	private Connection conn = DBConn.getConnection();
 	
+	// 점주(Owner) 테이블 CRUD
 	public void insertOwner(OwnerDTO dto) throws SQLException{
-		int result = 0;
 		PreparedStatement pstmt = null;
 		String sql;
 		
@@ -41,9 +41,9 @@ public class OwnerDAO {
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, dto.getOwner_id());
-			pstmt.setString(1, dto.getOwner_birth());
-			pstmt.setString(1, dto.getOwner_tel());
-			pstmt.setString(1, dto.getOwner_email());
+			pstmt.setString(2, dto.getOwner_birth());
+			pstmt.setString(3, dto.getOwner_tel());
+			pstmt.setString(4, dto.getOwner_email());
 			
 			pstmt.executeUpdate();
 			
@@ -64,28 +64,26 @@ public class OwnerDAO {
 	}
 	
 	public void updateOwner(OwnerDTO dto) throws SQLException{
-		int result = 0;
 		PreparedStatement pstmt = null;
 		String sql;
 		
 		try {
 			conn.setAutoCommit(false);
 			
-			sql = "UPDATE Owner SET pwd = ?, name = ? "
+			sql = "UPDATE Owner SET owner_pwd = ? "
 					+ " WHERE owner_id = ?";
 			
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, dto.getOwner_pwd());
-			pstmt.setString(1, dto.getOwner_name());
-			pstmt.setString(1, dto.getOwner_id());
+			pstmt.setString(2, dto.getOwner_id());
 			
 			pstmt.executeUpdate();
 			
 			pstmt.close();
 			pstmt = null;
 			
-			sql = "UPDATE OwnerDetail SET birth = TO_DATE(?, 'YYYY-MM-DD'), tel = ?, email = ? "
+			sql = "UPDATE OwnerDetail SET owner_birth = TO_DATE(?, 'YYYY-MM-DD'), owner_tel = ?, owner_email = ? "
 					+ "WHERE owner_id = ?";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -112,7 +110,6 @@ public class OwnerDAO {
 	}
 	
 	public void deleteOwner(String owner_id) throws SQLException{
-		int result = 0;
 		PreparedStatement pstmt = null;
 		String sql;
 		
@@ -219,7 +216,7 @@ public class OwnerDAO {
 				list.add(dto);
 			}
 			
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs);
@@ -229,106 +226,4 @@ public class OwnerDAO {
 		return list;
 	}
 	
-	public List<ReservationDTO> listReservation(){
-		List<ReservationDTO> list = new ArrayList();
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		String sql;
-		
-		try {
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.close(rs);
-			DBUtil.close(pstmt);
-		}
-		
-		return list;
-	}
-	
-	public List<ReviewDTO> listReview(){
-		List<ReviewDTO> list = new ArrayList();
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		String sql;
-		
-		try {
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.close(rs);
-			DBUtil.close(pstmt);
-		}
-		
-		return list;
-	}
-	
-	public List<MenuDTO> listMenu(){
-		List<MenuDTO> list = new ArrayList();
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		String sql;
-		
-		try {
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.close(rs);
-			DBUtil.close(pstmt);
-		}
-		
-		return list;
-	}
-	
-	
-	public int insertRestaurant(RestaurantDTO dto) throws SQLException{
-		int result = 0;
-		PreparedStatement pstmt = null;
-		String sql;
-		
-		try {
-			
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			DBUtil.close(pstmt);
-		}
-		
-		return result;
-	}
-	
-	public int updateRestaurant(RestaurantDTO dto) throws SQLException{
-		int result = 0;
-		PreparedStatement pstmt = null;
-		String sql;
-		
-		try {
-			
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			DBUtil.close(pstmt);
-		}
-		
-		return result;
-	}
-	
-	public int deleteRestaurant(RestaurantDTO dto) throws SQLException{
-		int result = 0;
-		PreparedStatement pstmt = null;
-		String sql;
-		
-		try {
-			
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			DBUtil.close(pstmt);
-		}
-		
-		return result;
-	}
 }
