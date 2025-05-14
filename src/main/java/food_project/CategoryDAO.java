@@ -139,7 +139,7 @@ public class CategoryDAO {
 	}
 	
 	public List<CategoryDTO> listCategory(){
-		List<CategoryDTO> list = new ArrayList<CategoryDTO>();
+		List<CategoryDTO> list = new ArrayList<>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
@@ -155,8 +155,8 @@ public class CategoryDAO {
 			while(rs.next()) {
 				CategoryDTO dto = new CategoryDTO();
 				
-				dto.setCategory_id("category_id");
-				dto.setCategory_name("category_name");
+				dto.setCategory_id(rs.getString("category_id"));
+				dto.setCategory_name(rs.getString("category_name"));
 				
 				list.add(dto);
 			}

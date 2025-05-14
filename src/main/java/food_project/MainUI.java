@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import db.util.DBConn;
 
 
+
+
 public class MainUI {
 	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private LoginInfo login = new LoginInfo();
@@ -15,6 +17,7 @@ public class MainUI {
 	private MemberUI memberUI = new MemberUI(login);
 	private OwnerUI ownerUI = new OwnerUI(ologin);
 	private AdminUI adminUI = new AdminUI(login);
+	private RestaurantUI restaurantOnwerUI = new RestaurantUI(ownerUI);
 	
 	public void menu() {
 		while(true) {
@@ -26,14 +29,13 @@ public class MainUI {
 	        } else if(loginMember != null && loginMember.getMember_id().equals("admin")) {
 					menuAdmin();
 			} else if(loginMember != null){
-					menuMember();
+				menuMember();
 			}else if(loginOwner != null){
-				ownerUI.ownerManage();
+				menuOwner();
 			}
 		}  
 				
 	}
-	
 	
 	public void menuGuest() {
 		int ch;
@@ -74,8 +76,8 @@ public class MainUI {
 				ch = Integer.parseInt(br.readLine());
 			} while(ch <1 || ch > 7);	
 				switch(ch) {
-					case 1: memberUI.restaurantlist();break;
-					case 2: memberUI.restaurantsearch();break;
+					case 1: restaurantOnwerUI.Allrestaurant();break;
+					case 2: restaurantOnwerUI.menu2();break;
 					case 3: memberUI.Favoriteslist();break;
 					case 4: memberUI.reservationlist();break;
 					case 5: memberUI.memberupdate();break;
@@ -98,10 +100,10 @@ public class MainUI {
 			} while(ch < 1 || ch > 8);	
 				switch(ch) {
 				case 1: ownerUI.reservation(); break;
-				case 2: ownerUI.review(); break;
+				case 2: restaurantOnwerUI.Allrestaurant(); break;
 				case 3: ownerUI.menu(); break;
-				case 4: ownerUI.updateRestaurant(); break;
-				case 5: ownerUI.registrationOrDelete(); break;
+				case 4: restaurantOnwerUI.updateRestaurant(); break;
+				case 5: restaurantOnwerUI.menu(); break;
 				case 6: ownerUI.update(); break;
 				case 7: ownerUI.withdraw(); break;
 				case 8: ologin.logout(); System.out.println();break;
@@ -117,20 +119,20 @@ public class MainUI {
 			System.out.println("관리자 로그인");
 			do {
 				System.out.println("1.음식점 등록/삭제 허가 2.음식점 리스트");
-				System.out.print("3. 회원리스트 4.리뷰관리 5.로그아웃 => ");
+				System.out.print("3.회원리스트 4.점주 리스트 5.리뷰관리 6.카테고리 리스트 7.로그아웃 => ");
 				ch = Integer.parseInt(br.readLine());
-			} while(ch < 1 || ch > 5);	
+			} while(ch < 1 || ch > 7);	
 				switch(ch) {
 				case 1: adminUI.permission();break;
 				case 2: adminUI.reservationlist();break;
 				case 3: adminUI.memberlist();break;
-				case 4: adminUI.reviewlist();break;
-				case 5: login.logout(); System.out.println();break;				
-				
+				case 4: adminUI.ownerlist();break;
+				case 5: adminUI.reviewlist();break;
+				case 6: adminUI.categorylist();break;
+				case 7: login.logout(); System.out.println();break;				
 				}
 				
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 	}
 }

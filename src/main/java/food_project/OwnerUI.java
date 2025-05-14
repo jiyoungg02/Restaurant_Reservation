@@ -12,36 +12,11 @@ public class OwnerUI {
 	public OwnerUI(LoginInfo2 loginInfo) {
 		this.loginInfo = loginInfo;
 	}
-
 	
-	public void ownerManage() {
-		int ch = 0;
-		
-		while(true) {
-			System.out.println("\n[점주 메뉴]");
-			
-			try {
-				System.out.print("1.예약조회 2.리뷰조회 3.메뉴확인 4.음식점 상세정보 수정 5.음식점 등록/삭제 요청 6.개인정보수정 7.탈퇴 8.로그아웃 => ");
-				ch = Integer.parseInt(br.readLine());
-				
-				if(ch == 8) {
-					loginInfo.logout(); System.out.println();
-					return;
-				}
-				
-				switch(ch) {
-				case 1: reservation(); break;
-				case 2: review(); break;
-				case 3: menu(); break;
-				case 4: updateRestaurant(); break;
-				case 5: registrationOrDelete(); break;
-				case 6: update(); break;
-				case 7: withdraw(); break;
-				}
-			} catch (Exception e) {
-			}
-		}
+		public LoginInfo2 getLoginInfo() {
+		return loginInfo;
 	}
+	
 	
 	public void reservation() {
 		System.out.println("\n[예약조회]");
@@ -107,15 +82,17 @@ public class OwnerUI {
 			System.out.print("회원을 탈퇴 하시겠습니까[Y/N] ? ");
 	        
 			ch = (br.readLine().trim()).charAt(0);
-			// System.out.println(ch);
 
 			if (ch == 'Y' || ch == 'y') {
 				dao.deleteOwner(loginInfo.loginOwner().getOwner_id());
                 loginInfo.logout();
+                System.out.println("탈퇴되었습니다.\n");
+                MainUI ui = new MainUI(); 
+				ui.menu();
 			}
 			
 		} catch (Exception e) {
-			// e.printStackTrace();
+			e.printStackTrace();
 			System.out.println("탈퇴 실패...");
 		}
 		System.out.println();

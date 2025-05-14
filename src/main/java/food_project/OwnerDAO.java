@@ -116,15 +116,6 @@ public class OwnerDAO {
 		try {
 			conn.setAutoCommit(false);
 			
-			sql = "DELETE FROM OwnerDetail WHERE owner_id = ?";
-			
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, owner_id);
-			
-			pstmt.executeUpdate();
-			pstmt.close();
-			pstmt = null;
-			
 			sql = "DELETE FROM Owner WHERE owner_id = ?";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -195,7 +186,7 @@ public class OwnerDAO {
 		String sql;
 		
 		try {
-			sql = "SELECT o1.owner_id, owner_pwd, owner_name, TO_CHAR(birth, 'YYYY-MM-DD') owner_birth, owner_tel, owner_email "
+			sql = "SELECT o1.owner_id, owner_pwd, owner_name, TO_CHAR(owner_birth, 'YYYY-MM-DD') owner_birth, owner_tel, owner_email "
 					+ " FROM Owner o1 "
 					+ " LEFT OUTER JOIN OwnerDetail o2 ON o1.owner_id = o2.owner_id ";
 			
@@ -206,12 +197,12 @@ public class OwnerDAO {
 			while(rs.next()) {
 				OwnerDTO dto = new OwnerDTO();
 				
-				dto.setOwner_id("owner_id");
-				dto.setOwner_pwd("owner_pwd");
-				dto.setOwner_name("owner_name");
-				dto.setOwner_birth("owner_birth");
-				dto.setOwner_tel("owner_tel");
-				dto.setOwner_email("owner_email");
+				dto.setOwner_id(rs.getString("owner_id"));
+				dto.setOwner_pwd(rs.getString("owner_pwd"));
+				dto.setOwner_name(rs.getString("owner_name"));
+				dto.setOwner_birth(rs.getString("owner_birth"));
+				dto.setOwner_tel(rs.getString("owner_tel"));
+				dto.setOwner_email(rs.getString("owner_email"));
 				
 				list.add(dto);
 			}
