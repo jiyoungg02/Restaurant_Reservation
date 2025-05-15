@@ -76,12 +76,12 @@ public class MainUI {
 				ch = Integer.parseInt(br.readLine());
 			} while(ch <1 || ch > 7);	
 				switch(ch) {
-					case 1: restaurantOnwerUI.Allrestaurant();break;
+					case 1: memberUI.restaurantList();break;
 					case 2: restaurantOnwerUI.menu2();break;
-					case 3: memberUI.Favoriteslist();break;
-					case 4: memberUI.reservationlist();break;
-					case 5: memberUI.memberupdate();break;
-					case 6: memberUI.memberdelete();break;
+					case 3: memberUI.favoritesList();break;
+					case 4: memberUI.reservationList();break;
+					case 5: memberUI.memberUpdate();break;
+					case 6: memberUI.memberDelete();break;
 					case 7: login.logout(); System.out.println(); break;
 				}
 		} catch (Exception e) {
@@ -124,7 +124,7 @@ public class MainUI {
 			} while(ch < 1 || ch > 7);	
 				switch(ch) {
 				case 1: adminUI.permission();break;
-				case 2: adminUI.reservationlist();break;
+				case 2: restaurantOnwerUI.Allrestaurant();break;
 				case 3: adminUI.memberlist();break;
 				case 4: adminUI.ownerlist();break;
 				case 5: adminUI.reviewlist();break;

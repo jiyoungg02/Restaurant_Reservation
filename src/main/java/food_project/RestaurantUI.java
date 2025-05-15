@@ -3,13 +3,17 @@ package food_project;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RestaurantUI {
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private RestaurantDAO rdao = new RestaurantDAO();
 	private LoginInfo login;
-	private OwnerUI ownerui; 
+	private OwnerUI ownerui;
+	
+	public RestaurantUI() {
+	}
 	
 	public RestaurantUI(OwnerUI ownerui) {
 		this.ownerui = ownerui;
@@ -118,14 +122,35 @@ public class RestaurantUI {
 		RestaurantDTO dto = new RestaurantDTO();
 		
 		try {
-			OwnerDTO owner = ownerui.getLoginInfo().loginOwner();
-			if(owner == null) {
-				System.out.println("점주 로그인을 하세요");
-				return;
-			}
-			
 			System.out.print("수정할 음식점 코드 ? ");
 			dto.setRestaurant_id(br.readLine());
+			
+			// 해당 음식점 정보 가져오기
+	        dto = rdao.findByIdrestaurant(dto.getRestaurant_id());
+	        if (dto == null) {
+	            System.out.println("해당 음식점이 존재하지 않습니다.");
+	            return;
+	        }
+	        
+	        // 음식점에 소유자가 설정되어 있는지 확인
+	        if (dto.getOwner_id() == null) {
+	            System.out.println("이 음식점에는 소유자가 지정되어 있지 않습니다.");
+	            return;
+	        }
+	        
+	        
+	        // 로그인된 점주의 정보 확인
+	        OwnerDTO owner = ownerui.getLoginInfo().loginOwner();
+	        if (owner == null) {
+	            System.out.println("점주 로그인을 하세요.");
+	            return;
+	        }
+
+	        // 로그인된 점주와 음식점의 소유자가 일치하는지 확인
+	        if (!dto.getOwner_id().equals(owner.getOwner_id())) {
+	            System.out.println("다른 점주의 음식점 정보는 수정할 수 없습니다.");
+	            return;
+	        }
 			
 			System.out.print("새로운 음식점 이름 ? ");
 			dto.setRestaurant_name(br.readLine());
@@ -147,11 +172,9 @@ public class RestaurantUI {
 			
 			System.out.print("새로운 음식점 카테고리 코드 ? ");
 			dto.setCategory_id(br.readLine());
-						
-			
+											
 			rdao.updateRestaurant(dto);
-			
-		
+					
 			System.out.println("수정이 완료 되었습니다.");
 			
 			
@@ -263,8 +286,60 @@ public class RestaurantUI {
 		
 	}
 	
-	public void findByrestaurant_details() {
+	public void findByrestaurant_details(String category_id) {
 		System.out.println("\n[음식점 상세 정보 검색]");
+		
+		try {
+			System.out.print("1.오픈/마감시간 2.메뉴/가격 3.리뷰 4.뒤로가기 => ");
+			String ch = br.readLine().trim();
+			
+			switch(ch) {
+			case "1": searchOpenClose(category_id); break;
+			case "2": break;
+			case "3": break;
+			case "4": System.out.println(); return;
+			}
+			
+		} catch (Exception e) {
+		}
+	}
+	
+	public void searchOpenClose(String category_id) {
+		System.out.println("\n[음식점 오픈/마감시간 검색]");
+		
+		
+		try {
+			System.out.print("오픈/마감 시간 검색할 음식점 이름 ? ");
+			String name = br.readLine();
+			
+			List<RestaurantDTO> list = rdao.RestaurantDetails(name, category_id);
+			System.out.println("음식점이름\t오픈시간\t마감시간");
+			System.out.println("-------------------------");
+			for(RestaurantDTO dto : list) {
+				System.out.print(dto.getRestaurant_name() + "\t");
+				System.out.print(dto.getOpening_time() + "\t");
+				System.out.print(dto.getClosing_time() + "\n");
+			}
+			System.out.println();
+			
+		} catch (Exception e) {
+		}
+	}
+	
+	
+	public void findByCategoryIdrestaurant(String category_id) {
+		System.out.println("\n[음식점 리스트]");
+		
+		List<RestaurantDTO> list = rdao.findByCategoryIdrestaurant(category_id);
+		
+		System.out.println("음식점코드\t음식점이름\t위치\t전화번호");
+		for(RestaurantDTO dto : list) {
+			System.out.print(dto.getRestaurant_id() + "\t");
+			System.out.print(dto.getRestaurant_name() + "\t");
+			System.out.print(dto.getRestaurant_address() + "\t");
+			System.out.print(dto.getRestaurant_tel() + "\n");
+		}
+		System.out.println();
 		
 	}
 	

@@ -7,7 +7,6 @@ public class MemberDTO {
 	private String birth;
 	private String tel;
 	private String email;
-	
 
 	public String getMember_id() {
 		return member_id;

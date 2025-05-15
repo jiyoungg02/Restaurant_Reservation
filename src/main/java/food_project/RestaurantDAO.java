@@ -431,11 +431,131 @@ public class RestaurantDAO {
 	}
 
 	
+	public RestaurantDTO findByIdrestaurant(String id) {
+		RestaurantDTO dto = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+	    try {
+	        
+	        sql = "SELECT restaurant_id, restaurant_name, "
+	                + " restaurant_address, restaurant_tel, "
+	                + " restaurant_count, opening_time, closing_time, "
+	                + " category_id, owner_id "  
+	                + " FROM restaurant "
+	                + " WHERE restaurant_id = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				dto = new RestaurantDTO();
+				
+				 dto.setRestaurant_id(rs.getString("restaurant_id"));
+		         dto.setRestaurant_name(rs.getString("restaurant_name"));
+		         dto.setRestaurant_address(rs.getString("restaurant_address"));
+		         dto.setRestaurant_tel(rs.getString("restaurant_tel"));
+		         dto.setRestaurant_count(rs.getInt("restaurant_count"));
+		         dto.setOpening_time(rs.getString("opening_time"));
+		         dto.setClosing_time(rs.getString("closing_time"));
+		         dto.setCategory_id(rs.getString("category_id"));		            		     
+		         dto.setOwner_id(rs.getString("owner_id")); 
+				
+				
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+		
+		return dto;
+	}
 	
+	// 카테고리 아이디로 음식점 검색
+	public List<RestaurantDTO> findByCategoryIdrestaurant(String category_id) {
+		List<RestaurantDTO> list = new ArrayList<RestaurantDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+	    try {
+	        
+	        sql = "SELECT restaurant_id, restaurant_name, "
+	                + " restaurant_address, restaurant_tel "
+	                + " FROM restaurant "
+	                + " WHERE restaurant_approve = 'Y' AND category_id = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, category_id);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				RestaurantDTO dto = new RestaurantDTO();
+				
+				dto.setRestaurant_id(rs.getString("restaurant_id"));
+		        dto.setRestaurant_name(rs.getString("restaurant_name"));
+		        dto.setRestaurant_address(rs.getString("restaurant_address"));
+		        dto.setRestaurant_tel(rs.getString("restaurant_tel"));
+				
+		        list.add(dto);
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+		
+		return list;
+	}
 	
-	
-	
-	
+	// 음식점 오픈 마감 시간 검색
+	public List<RestaurantDTO> RestaurantDetails(String name, String category_id) {
+		List<RestaurantDTO> list = new ArrayList<RestaurantDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT restaurant_name, opening_time, closing_time "
+					+ " FROM restaurant "
+					+ " WHERE restaurant_approve = 'Y' AND restaurant_name = ? AND category_id = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, name);
+			pstmt.setString(2, category_id);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				RestaurantDTO dto = new RestaurantDTO();
+				
+				dto.setRestaurant_name(rs.getString("restaurant_name"));
+				dto.setOpening_time(rs.getString("opening_time"));
+				dto.setClosing_time(rs.getString("closing_time"));
+				
+		        list.add(dto);
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+		
+		return list;
+	}
 	
 	
 }

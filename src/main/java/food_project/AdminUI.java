@@ -14,6 +14,7 @@ public class AdminUI {
 	private CategoryDAO categorydao = new CategoryDAO();
 	private CategoryUI categoryUI = new CategoryUI();
 	private RestaurantDAO rdao = new RestaurantDAO();
+	private AdminDAO adao = new AdminDAO();
 	
 	public AdminUI(LoginInfo loginInfo) {
 		this.loginInfo = loginInfo;
@@ -112,9 +113,65 @@ public class AdminUI {
 	}
 
 	public void memberlist() {
-		System.out.println("\n[회원 리스트]");
-		
-		
+		System.out.println("\n[회원리스트]");
+		try {
+			List<MemberDTO> list = memberdao.listMember();
+			System.out.println("아이디\t비밀번호\t이름\t생년월일\t\t전화번호\t\t이메일");
+			for(MemberDTO dto : list) {
+				System.out.print(dto.getMember_id() + "\t");
+				System.out.print(dto.getPwd() + "\t");
+				System.out.print(dto.getName() + "\t");
+				System.out.print(dto.getBirth() + "\t");
+				System.out.print(dto.getTel() + "\t");
+				System.out.print(dto.getEmail() + "\n");
+			}
+			
+			while(true) {
+				int ch1;
+				String ch2 = null;
+				
+				System.out.println("\n검색할 회원 키워드 ?");
+				System.out.print("1.아이디 2.이름 3.생년월일 4.이메일 5.전화번호 6.뒤로가기 => ");
+				ch1 = Integer.parseInt(br.readLine());
+				System.out.println();	
+				if (ch1 == 6) {
+					return;
+				}
+				
+				switch(ch1) {
+				case 1 : System.out.print("검색할 아이디? ");
+						 ch2 =  br.readLine();break;
+				case 2 : System.out.print("검색할 이름? ");
+ 						 ch2 =  br.readLine();break;
+				case 3 : System.out.print("검색할 생년월일? ");
+						 ch2 =  br.readLine();break;
+				case 4 : System.out.print("검색할 이메일? ");
+						 ch2 =  br.readLine();break;		 
+				case 5 : System.out.print("검색할 전화번호? ");
+						 ch2 =  br.readLine();break;
+				default: System.out.println("잘못된 번호입니다. 다시 선택해주세요."); continue;
+				}
+				
+				MemberDTO dto = adao.findById(ch1, ch2);
+				if (dto == null) {
+					System.out.println("등록된 정보가 아닙니다.\n");
+					memberlist();
+				}
+				System.out.println("\n아이디\t비밀번호\t이름\t생년월일\t\t전화번호\t\t이메일");
+				System.out.print(dto.getMember_id() + "\t");
+				System.out.print(dto.getPwd() + "\t");
+				System.out.print(dto.getName() + "\t");
+				System.out.print(dto.getBirth() + "\t");
+				System.out.print(dto.getTel() + "\t");
+				System.out.print(dto.getEmail() + "\n");
+				
+				
+
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void ownerlist() {
@@ -139,23 +196,24 @@ public class AdminUI {
 		
 		List<CategoryDTO> list = categorydao.listCategory();
 		
-		System.out.println("카테고리 아이디\t카테고리 이름");
-		System.out.println("----------------------------");
-		for(CategoryDTO dto : list) {
-			System.out.print(dto.getCategory_id() + "\t\t");
-			System.out.print(dto.getCategory_name() + "\n");
-		}
-		System.out.println();
 		
 		try {
 			int ch;
 			
 			do {
+				System.out.println("카테고리 아이디\t카테고리 이름");
+				System.out.println("----------------------------");
+				for(CategoryDTO dto : list) {
+					System.out.print(dto.getCategory_id() + "\t\t");
+					System.out.print(dto.getCategory_name() + "\n");
+				}
+				System.out.println();
+				
 				System.out.print("1.카테고리 추가 2.카테고리 수정 3.카테고리 삭제 4.뒤로가기 => ");
 				ch = Integer.parseInt(br.readLine());
 					
 				switch(ch) {
-				case 1: categoryUI.insert();; break;
+				case 1: categoryUI.insert(); break;
 				case 2: categoryUI.update(); break;
 				case 3: categoryUI.delete(); break;
 				case 4: System.out.println(); return;
