@@ -1,0 +1,181 @@
+-- 회원 테이블
+
+CREATE TABLE Member (
+	member_id  VARCHAR2(30)  PRIMARY KEY, 
+	pwd		     VARCHAR2(200) NOT NULL,  
+	name	     VARCHAR2(10)  NOT NULL 
+);
+
+SELECT * FROM tab;
+
+--  회원 상세정보 테이블
+
+CREATE TABLE Member_details (
+	member_id  VARCHAR2(30)  PRIMARY KEY,
+	birth		   DATE,                      
+	tel	       VARCHAR2(20),             
+	email	     VARCHAR2(30)
+);
+
+ALTER TABLE Member_details ADD CONSTRAINT fk_member_id  FOREIGN KEY(member_id) REFERENCES Member(member_id);
+
+-- 즐겨찾기 테이블
+
+CREATE TABLE Favorites (
+	member_id     VARCHAR2(30), 
+	restaurant_id VARCHAR2(30)  
+);
+
+ALTER TABLE Favorites ADD PRIMARY KEY(member_id,Restaurant_id);
+
+ALTER TABLE Favorites ADD CONSTRAINT fk_mem_id  FOREIGN KEY(member_id) REFERENCES Member(member_id);
+ALTER TABLE Favorites ADD CONSTRAINT fk_Res_id  FOREIGN KEY(restaurant_id) REFERENCES Restaurant(restaurant_id);
+
+
+-- 음식점 테이블
+
+create TABLE Restaurant (
+	restaurant_id VARCHAR2(30) PRIMARY KEY,
+	restaurant_name VARCHAR2(30) NOT NULL,
+	restaurant_address VARCHAR2(30) NOT NULL,
+	restaurant_tel VARCHAR2(30),
+	restaurant_count NUMBER(10) NOT NULL,
+	opening_time VARCHAR2(30),
+	closing_time VARCHAR2(30),
+	restaurant_approve VARCHAR2(5) DEFAULT 0 NOT NULL,
+	owner_id VARCHAR2(30) NOT NULL,	
+	category_id	VARCHAR2(30) NOT NULL
+	);
+
+
+ALTER TABLE Restaurant ADD CONSTRAINT fk_Restaurant_owner_id FOREIGN KEY (owner_id) REFERENCES Owner (owner_id);
+ALTER TABLE Restaurant ADD CONSTRAINT fk_Restaurant_category_id FOREIGN KEY (category_id) REFERENCES Category (category_id);
+
+
+-- 예약 테이블
+
+CREATE TABLE Reservation (
+	reservation_id VARCHAR2(30) PRIMARY KEY,
+	reservation_date DATE NOT NULL,
+	reservation_time VARCHAR2(30) NOT NULL,
+	is_available VARCHAR2(5) DEFAULT 'N' NOT NULL,
+	number_of_people NUMBER(10) DEFAULT 1 NOT NULL,
+	is_used VARCHAR2(5) DEFAULT 'N' NOT NULL,
+	restaurant_id VARCHAR2(30) NOT NULL,
+	member_id VARCHAR2(30) NOT NULL,
+	CONSTRAINT fk_Reservation_restaurant_id FOREIGN KEY(restaurant_id) REFERENCES Restaurant (restaurant_id),
+	CONSTRAINT fk_Reservation_member_id FOREIGN KEY(member_id) REFERENCES Member (member_id)
+);
+
+-- 음식점 리뷰/메뉴 테이블
+
+CREATE TABLE Review(
+member_id 		VARCHAR2(30) not null,
+review_rating		NUMBER(1),
+review_etccomment	VARCHAR2(1000),
+review_comment		VARCHAR2(1000),
+reservation_id		VARCHAR2(30) not null
+);
+
+ALTER TABLE Review ADD CONSTRAINT fk_Review_member_id FOREIGN KEY(member_id) REFERENCES Member(member_id);
+ALTER TABLE Review ADD CONSTRAINT fk_Review_reservation_id FOREIGN KEY(reservation_id) REFERENCES Reservation(reservation_id);
+
+INSERT INTO Menu(member_id, review_rating, review_etccomment, review_comment, reservation_id) VULRES('1', 5, '볶음정도가 이븐해서 좋네요 번창하세요', '알아봐주셔서 감사합니다! ㅎㅎ 다음번에 오셔서 이야기해주시면 서비스 드리겠습니다!', '1');
+INSERT INTO Menu(member_id, review_rating, review_etccomment, review_comment, reservation_id) VULRES('2', 5, '너무 맛있어요 ^^b', '맛있게 먹어주셔서 감사합니다! 항상 열심히 하겠습니다!', '2');
+
+
+CREATE TABLE Menu(
+menu_id 			VARCHAR2(30) primary key,
+menu_name		VARCHAR2(3000) not null,
+menu_price			NUMBER(10) not null,
+restaurant_id		VARCHAR2(30) not null
+);
+
+ALTER TABLE Menu ADD CONSTRAINT fk_Review_id FOREIGN KEY(restaurant_id) REFERENCES Restaurant(restaurant_id);
+
+
+-- 점주 / 카테고리 테이블
+
+CREATE TABLE Category(
+	category_id VARCHAR2(30) PRIMARY KEY,
+	category_name VARCHAR2(20) DEFAULT '기타'
+);
+
+
+CREATE TABLE Owner(
+	owner_id VARCHAR2(30) PRIMARY KEY,
+	owner_pwd VARCHAR2(30) NOT NULL,
+	owner_name VARCHAR2(30) NOT NULL
+);
+
+CREATE TABLE OwnerDetail(
+	owner_id VARCHAR2(30) PRIMARY KEY,
+	owner_birth DATE,
+	owner_tel VARCHAR2(30),
+	owner_email VARCHAR2(30),
+	CONSTRAINT fk_OwnerDetail_owner_id FOREIGN KEY(owner_id) REFERENCES Owner(owner_id)
+);
+
+
+-- 회원 등록
+
+INSERT INTO Member(member_id, pwd, name) VALUES('1','1','김자바');
+INSERT INTO Member(member_id, pwd, name) VALUES('2','2','나자바');
+INSERT INTO Member(member_id, pwd, name) VALUES('admin','admin','관리자');
+
+
+--  회원 상세정보 등록
+
+INSERT INTO Member_details(member_id, birth, tel, email) VALUES('1',	TO_DATE('2010-10-10','YYYY-MM-DD'),'01011111111', '1@1.com');
+INSERT INTO Member_details(member_id, birth, tel, email) VALUES('2',	TO_DATE('2012-12-12','YYYY-MM-DD'),'01022222222', '2@2.com');
+INSERT INTO Member_details(member_id, birth, tel, email) VALUES('admin', TO_DATE('2005-05-05','YYYY-MM-DD'),'01099999999', 'admin@admin.com');
+
+-- 점주 
+INSERT INTO Owner (owner_id, owner_pwd, owner_name) 
+    VALUES ('owner1', 'owner1@', '김점주');
+    
+INSERT INTO Owner (owner_id, owner_pwd, owner_name) 
+    VALUES ('owner2', 'owner2@', '나점주');
+    
+INSERT INTO OwnerDetail (owner_id, owner_birth, owner_tel, owner_email) 
+    VALUES ('owner1', TO_DATE('2001-05-23', 'YYYY-MM-DD'), '010-1234-1111', 'owner1@naver.com');
+    
+INSERT INTO OwnerDetail (owner_id, owner_birth, owner_tel, owner_email) 
+    VALUES ('owner2', TO_DATE('1999-03-15', 'YYYY-MM-DD'), '010-2345-2222', 'owner2@naver.com');
+
+-- 카테고리
+
+INSERT INTO Category (category_id, category_name) 
+    VALUES ('1', '한식');
+    
+INSERT INTO Category (category_id, category_name) 
+    VALUES ('2', '양식');
+
+-- 음식점
+INSERT INTO Restaurant(restaurant_id, restaurant_name, restaurant_address, restaurant_tel, restaurant_count, opening_time, closing_time, restaurant_approve, owner_id, category_id)	   
+	VALUES('1','한상','서울','010-1234-1234',4,'9:00','22:00','1','owner1','1');
+INSERT INTO Restaurant(restaurant_id, restaurant_name, restaurant_address, restaurant_tel, restaurant_count, opening_time, closing_time, restaurant_approve, owner_id, category_id)	   
+	VALUES('2','라파엘','인천','010-4567-1357',6,'11:00','23:00','1','owner2','2');
+-- 메뉴
+INSERT INTO Menu(menu_id, menu_name, menu_price, restaurant_id) VULRES('K-0001','비빔밥', 9500, '1');
+INSERT INTO Menu(menu_id, menu_name, menu_price, restaurant_id) VULRES('K-0002','제육볶음', 12000, '1');
+INSERT INTO Menu(menu_id, menu_name, menu_price, restaurant_id) VULRES('K-0003','닭갈비', 12000,'1');
+
+
+INSERT INTO Menu(menu_id, menu_name, menu_price, restaurant_id) VULRES('W-0001','알리올리오', 8000, '2');
+INSERT INTO Menu(menu_id, menu_name, menu_price, restaurant_id) VULRES('W-0002','크림파스타', 9000, '2');
+INSERT INTO Menu(menu_id, menu_name, menu_price, restaurant_id) VULRES('W-0003','까르보나라', 9000, '2');
+
+-- 예약
+INSERT INTO Reservation (reservation_id , reservation_date , reservation_time , is_available , number_of_people, is_used, restaurant_id, member_id ) VALUES('1', '2025-05-25', TO_DATE('14:00', 'HH24:MI'), 'Y', 5, 'N', '1', '1');
+INSERT INTO Reservation (reservation_id , reservation_date , reservation_time , is_available , number_of_people, is_used, restaurant_id, member_id ) VALUES('2', '2025-05-05', TO_DATE('12:00', 'HH24:MI'), 'N', 10, 'Y', '2', '1');
+
+-- 리뷰
+INSERT INTO Menu(member_id, review_rating, review_etccomment, review_comment, reservation_id) VULRES('1', 5, '볶음정도가 이븐해서 좋네요 번창하세요', '알아봐주셔서 감사합니다! ㅎㅎ 다음번에 오셔서 이야기해주시면 서비스 드리겠습니다!', '1');
+INSERT INTO Menu(member_id, review_rating, review_etccomment, review_comment, reservation_id) VULRES('2', 5, '너무 맛있어요 ^^b', '맛있게 먹어주셔서 감사합니다! 항상 열심히 하겠습니다!', '2');
+
+-- 즐겨찾기
+
+INSERT INTO Favorites(member_id, Restaurant_id) VALUES('1', '1');
+INSERT INTO Favorites(member_id, Restaurant_id) VALUES('2', '2');
+

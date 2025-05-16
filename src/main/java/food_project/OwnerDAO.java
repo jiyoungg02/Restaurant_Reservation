@@ -116,6 +116,15 @@ public class OwnerDAO {
 		try {
 			conn.setAutoCommit(false);
 			
+			sql = "DELETE FROM OwnerDetail WHERE owner_id = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, owner_id);
+			
+			pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
+			
 			sql = "DELETE FROM Owner WHERE owner_id = ?";
 			
 			pstmt = conn.prepareStatement(sql);

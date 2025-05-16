@@ -3,7 +3,6 @@ package food_project;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 
@@ -11,13 +10,13 @@ public class MemberUI {
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private MemberDAO dao = new MemberDAO();
 	private LoginInfo loginInfo = null;
-	private RestaurantUI restaurantUI = new RestaurantUI();
+	private RestaurantUImember restaurantUImember = new RestaurantUImember(loginInfo);
+	private ReservationUI reservationUI = new ReservationUI(loginInfo);
 	
 		public MemberUI(LoginInfo loginInfo) {
 			this.loginInfo = loginInfo;
 		}
-	
-	
+		
 	
 	public void restaurantList() {
 		System.out.println("\n음식점 리스트 확인");
@@ -31,13 +30,13 @@ public class MemberUI {
 				ch = br.readLine().trim();
 				
 				switch(ch) {
-				case "1": restaurantUI.findByCategoryIdrestaurant(ch); restaurantDetail(ch); break;
-				case "2": restaurantUI.findByCategoryIdrestaurant(ch); restaurantDetail(ch); break;
-				case "3": restaurantUI.findByCategoryIdrestaurant(ch); restaurantDetail(ch); break;
-				case "4": restaurantUI.findByCategoryIdrestaurant(ch); restaurantDetail(ch); break;
-				case "5": restaurantUI.findByCategoryIdrestaurant(ch); restaurantDetail(ch); break;
-				case "6": restaurantUI.findByCategoryIdrestaurant(ch); restaurantDetail(ch); break;
-				case "7": restaurantUI.findByCategoryIdrestaurant(ch); restaurantDetail(ch); break;
+				case "1": restaurantUImember.findByCategoryIdrestaurant(ch); restaurantDetail(ch); break;
+				case "2": restaurantUImember.findByCategoryIdrestaurant(ch); restaurantDetail(ch); break;
+				case "3": restaurantUImember.findByCategoryIdrestaurant(ch); restaurantDetail(ch); break;
+				case "4": restaurantUImember.findByCategoryIdrestaurant(ch); restaurantDetail(ch); break;
+				case "5": restaurantUImember.findByCategoryIdrestaurant(ch); restaurantDetail(ch); break;
+				case "6": restaurantUImember.findByCategoryIdrestaurant(ch); restaurantDetail(ch); break;
+				case "7": restaurantUImember.findByCategoryIdrestaurant(ch); restaurantDetail(ch); break;
 				case "8": System.out.println(); return;
 				}
 				
@@ -57,9 +56,9 @@ public class MemberUI {
 				 ch = br.readLine().trim();
 				
 				switch(ch) {
-				case "1": restaurantUI.findByrestaurant_details(category_id); break;
-				case "2": break;
-				case "3": favoritesinsert();break;
+				case "1": restaurantUImember.findByrestaurant_details(category_id); break;
+				case "2": reservationUI.startReservationMenu(loginInfo.loginMember().getMember_id()); break;
+				case "3": favoritesinsert(); break;
 				case "4": System.out.println(); return;
 				}
 				
@@ -70,20 +69,23 @@ public class MemberUI {
 		}
 	}	
 	
+	
+	// 즐겨찾기 등록
 	public void favoritesinsert() {
-		System.out.println("즐겨찾기 등록");
+		System.out.println("\n[즐겨찾기 등록]");
 		String id;
 		try {
-			System.out.print("[음식점 아이디] ?");
+			System.out.print("음식점 아이디 ? ");
 			id = br.readLine();
 			
 			dao.insertFavorites(loginInfo.loginMember().getMember_id(),id);
 			
 			if(dao != null) {
-				System.out.println("즐겨찾기 삭제 완료...");
-			}else {
-				System.out.println("즐겨찾기 삭제 실패...");
+				System.out.println("즐겨찾기 등록 완료...");
+			} else {
+				System.out.println("즐겨찾기 등록 실패...");
 			}
+			
 		} catch (NumberFormatException e) {
 			System.out.println("잘못입력하셨습니다.");
 		} catch (SQLException e) {
@@ -94,18 +96,19 @@ public class MemberUI {
 		}
 		
 	}
-	
 	// 즐겨찾기리스트확인
 	public void favoritesList() {
-		System.out.println("즐겨찾기 리스트");
+		System.out.println("\n[즐겨찾기 리스트]");
 		int ch;
 		while(true) {
 			try {
 				List<Object> list = dao.FavoritesById(loginInfo.loginMember().getMember_id());
 				if (list.size() == 0) {
-					System.out.print("등록된 정보가 없습니다.\n");
+					System.out.println("등록된 정보가 없습니다.\n");
+				} else {
+					System.out.println("음식점코드\t음식점명");
+					System.out.println("----------------------");
 				}
-				System.out.println("회원아이디\t음식점코드\t음식점명");
 				for(Object obj : list) {
 					if(obj instanceof MemberDTO) {
 						MemberDTO dto = (MemberDTO)obj; 
@@ -133,9 +136,9 @@ public class MemberUI {
 			}
 		}
 	}
-	
+	// 즐겨찾기 삭제
 	public void deleteFavorites() {
-		System.out.println("즐겨찾기 삭제");
+		System.out.println("\n[즐겨찾기 삭제]");
 		String id;
 		try {
 			System.out.print("[삭제할 음식점 아이디] ?");
@@ -144,13 +147,11 @@ public class MemberUI {
 			dao.deleteFavorites(loginInfo.loginMember().getMember_id(),id);
 			
 			if(dao != null) {
-				System.out.println("즐겨찾기 삭제 완료...");
-			}else {
-				System.out.println("즐겨찾기 삭제 실패...");
+				System.out.println("즐겨찾기 삭제 완료...\n");
+			} else {
+				System.out.println("즐겨찾기 삭제 실패...\n");
 			}
 			
-		} catch (SQLIntegrityConstraintViolationException e) {
-			System.out.println("즐겨찾기 중복된 음식점입니다.");
 		} catch (NumberFormatException e) {
 			System.out.println("잘못입력하셨습니다.");
 		} catch (SQLException e) {
@@ -161,33 +162,36 @@ public class MemberUI {
 		}
 	}
 	
-	public void reservationList() {
-		int ch;
-		System.out.println("예약 목록 확인");
-		while(true) {
-			try {
-				System.out.println("1.이용한 예약목록 2.이용예정 예약 목록 3.뒤로가기");
-				ch = Integer.parseInt(br.readLine());
-				
-				if(ch == 3 ) {
-					return;
-				}
-				
-				switch(ch) {
-				case 1: restaurantList(); break;
-    			case 2: break;
-    			default:
-                    System.out.println("잘못된 번호입니다. 다시 선택하세요.");
-    			}
-			} catch(Exception e) {
-				
-			}
-		}
-			
-	}
 	
+//	public void reservationList() {
+//		int ch;
+//		System.out.println("예약 목록 확인");
+//		while(true) {
+//			try {
+//				System.out.println("1.이용한 예약목록 2.이용예정 예약 목록 3.뒤로가기");
+//				ch = Integer.parseInt(br.readLine());
+//				
+//				if(ch == 3 ) {
+//					return;
+//				}
+//				
+//				switch(ch) {
+//				case 1: restaurantList(); break;
+//    			case 2: restaurantSearch(); break;
+//    			default:
+//                    System.out.println("잘못된 번호입니다. 다시 선택하세요.");
+//    			}
+//			} catch(Exception e) {
+//				
+//			}
+//		}
+//			
+//	}
+	
+	
+		// 개인정보 수정
 	public void memberUpdate() { // 추가
-		System.out.println("개인정보 수정");
+		System.out.println("\n[개인정보 수정]");
 		try {
 			MemberDTO dto = loginInfo.loginMember();
 			
@@ -219,9 +223,9 @@ public class MemberUI {
 		}
 		System.out.println();
 	}
-	
+	// 회원탈퇴
 	public void memberDelete() { // 추가
-		System.out.println("회원탈퇴");
+		System.out.println("\n[회원탈퇴]");
 		char ch;
 		
 		try {

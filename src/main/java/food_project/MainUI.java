@@ -6,8 +6,6 @@ import java.io.InputStreamReader;
 import db.util.DBConn;
 
 
-
-
 public class MainUI {
 	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private LoginInfo login = new LoginInfo();
@@ -17,8 +15,12 @@ public class MainUI {
 	private MemberUI memberUI = new MemberUI(login);
 	private OwnerUI ownerUI = new OwnerUI(ologin);
 	private AdminUI adminUI = new AdminUI(login);
-	private RestaurantUI restaurantOnwerUI = new RestaurantUI(ownerUI);
+	private ReservationListUI reservationUI = new ReservationListUI(login);
+	private RestaurantUImember restaurantUImember = new RestaurantUImember(login);
+	private RestaurantUIowner restaurantUIowner = new RestaurantUIowner(ologin);
+
 	
+		
 	public void menu() {
 		while(true) {
 			MemberDTO loginMember = login.loginMember();
@@ -77,9 +79,9 @@ public class MainUI {
 			} while(ch <1 || ch > 7);	
 				switch(ch) {
 					case 1: memberUI.restaurantList();break;
-					case 2: restaurantOnwerUI.menu2();break;
+					case 2: restaurantUImember.menu2();break;
 					case 3: memberUI.favoritesList();break;
-					case 4: memberUI.reservationList();break;
+					case 4: reservationUI.menu();break;
 					case 5: memberUI.memberUpdate();break;
 					case 6: memberUI.memberDelete();break;
 					case 7: login.logout(); System.out.println(); break;
@@ -100,10 +102,10 @@ public class MainUI {
 			} while(ch < 1 || ch > 8);	
 				switch(ch) {
 				case 1: ownerUI.reservation(); break;
-				case 2: restaurantOnwerUI.Allrestaurant(); break;
+				case 2: ownerUI.review(); break;
 				case 3: ownerUI.menu(); break;
-				case 4: restaurantOnwerUI.updateRestaurant(); break;
-				case 5: restaurantOnwerUI.menu(); break;
+				case 4: restaurantUIowner.updateRestaurant(); break;
+				case 5: restaurantUIowner.menu(); break;
 				case 6: ownerUI.update(); break;
 				case 7: ownerUI.withdraw(); break;
 				case 8: ologin.logout(); System.out.println();break;
@@ -124,7 +126,7 @@ public class MainUI {
 			} while(ch < 1 || ch > 7);	
 				switch(ch) {
 				case 1: adminUI.permission();break;
-				case 2: restaurantOnwerUI.Allrestaurant();break;
+				case 2: restaurantUImember.Allrestaurant();break;
 				case 3: adminUI.memberlist();break;
 				case 4: adminUI.ownerlist();break;
 				case 5: adminUI.reviewlist();break;

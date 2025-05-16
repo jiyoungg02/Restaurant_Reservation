@@ -1,26 +1,27 @@
 package food_project;
 
-public class ReservationDTO {
+import java.sql.Date;
 
+public class ReservationDTO {
 	private String reservation_id;
-	private String reservation_date;
-	private String reservation_time;
-	private String is_available;
-	private int number_of_people;
-	private String is_used;
-	private String restaurant_id;
-	private String member_id;
-	
+	 private Date reservation_date;
+	 private String reservation_time;
+	 private String is_available;
+	 private int  number_of_people;
+	 private String is_used;
+	 private String restaurant_id;
+	 private String member_id;
+	 private String restaurant_name;
 	public String getReservation_id() {
 		return reservation_id;
 	}
 	public void setReservation_id(String reservation_id) {
 		this.reservation_id = reservation_id;
 	}
-	public String getReservation_date() {
+	public Date getReservation_date() {
 		return reservation_date;
 	}
-	public void setReservation_date(String reservation_date) {
+	public void setReservation_date(Date reservation_date) {
 		this.reservation_date = reservation_date;
 	}
 	public String getReservation_time() {
@@ -60,6 +61,15 @@ public class ReservationDTO {
 		this.member_id = member_id;
 	}
 	
+	public String getRestaurant_name() {
+	    return restaurant_name;
+	}
+	
+	public void setRestaurant_name(String restaurant_name) {
+	    this.restaurant_name = restaurant_name;
+	}
+
+	 
 	
 
 }

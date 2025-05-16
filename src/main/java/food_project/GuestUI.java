@@ -45,16 +45,14 @@ public class GuestUI {
 			System.out.println("회원가입이 완료 되었습니다.");
 
 		} catch (SQLIntegrityConstraintViolationException e) {
-			// 기본키 중복, NOT NULL등의 제약조건 위반에 의한 예외 발생-무결성 제약 조건 위반
 			if(e.getErrorCode()==1) {
 				System.out.println("아이디 중복입니다.");
-			} else if(e.getErrorCode()==1400){ // INSERT-NOT NULL 위반
+			} else if(e.getErrorCode()==1400){ 
 				System.out.println("필수 입력사항을 입력하지 않았습니다.");
 			} else {
 				System.out.println(e.toString());
 			}
 		} catch (SQLDataException e) {
-			// 날짜등의 형식 잘못으로 인한 예외
 			if(e.getErrorCode()==1840 || e.getErrorCode()==1861) {
 				System.out.println("날짜 입력 형식 오류입니다.");
 			} else {

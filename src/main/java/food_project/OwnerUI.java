@@ -9,14 +9,12 @@ public class OwnerUI {
 	private OwnerDAO dao = new OwnerDAO();
 	private LoginInfo2 loginInfo = null;
 	
+	
 	public OwnerUI(LoginInfo2 loginInfo) {
-		this.loginInfo = loginInfo;
+		this.loginInfo  = loginInfo;
 	}
 	
-		public LoginInfo2 getLoginInfo() {
-		return loginInfo;
-	}
-	
+
 	
 	public void reservation() {
 		System.out.println("\n[예약조회]");
@@ -29,14 +27,6 @@ public class OwnerUI {
 	
 	public void menu() {
 		System.out.println("\n[메뉴확인]");
-	}
-	
-	public void updateRestaurant() {
-		System.out.println("\n[음식점 상세정보 수정]");
-	}
-	
-	public void registrationOrDelete() {
-		System.out.println("\n[음식점 등록/삭제 요청]");
 	}
 	
 	public void update() {

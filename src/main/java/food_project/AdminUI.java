@@ -7,18 +7,19 @@ import java.util.List;;
 public class AdminUI {
 	private BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
 	private MemberDAO memberdao = new MemberDAO();
-	private RestaurantDAO restaurantdao = new RestaurantDAO();
-	private ReviewDAO reviewdao = new ReviewDAO();
+	private AdminDAO adao = new AdminDAO();
+	private RestaurantDAO rdao = new RestaurantDAO();
+	// private ReviewDAO reviewdao = new ReviewDAO();
 	private LoginInfo loginInfo = null;
 	private OwnerDAO ownerdao = new OwnerDAO();
 	private CategoryDAO categorydao = new CategoryDAO();
 	private CategoryUI categoryUI = new CategoryUI();
-	private RestaurantDAO rdao = new RestaurantDAO();
-	private AdminDAO adao = new AdminDAO();
 	
 	public AdminUI(LoginInfo loginInfo) {
 		this.loginInfo = loginInfo;
 	}
+	
+	
 	
 	public void permission() {
 		int ch;
@@ -26,7 +27,7 @@ public class AdminUI {
 		
 		try {
 			do {
-				System.out.print("1.음식점등록 2.음식점삭제 3.뒤로가기 ");
+				System.out.print("1.음식점등록 2.음식점삭제 3.뒤로가기 => ");
 				ch = Integer.parseInt(br.readLine());
 			} while(ch <1 || ch >3);
 			
@@ -53,14 +54,27 @@ public class AdminUI {
 										+ " 허가 여부 : "  + dto.getRestaurant_approve());
 			}
 			
-			System.out.print("음식점 코드 ? ");
+			System.out.print("승인 요청할 음식점 코드 ? ");
 			id = br.readLine();
 			
-			System.out.print("승인(Y) / 거부(N) ? ");
-			approve = br.readLine();
+	        RestaurantDTO dto = rdao.findByIdrestaurant(id);
+	        if(dto == null) {
+	        	System.out.println("해당 음식점이 존재하지 않습니다.");
+	        	return;
+	        }
+	        
+	        if(!"N".equalsIgnoreCase(dto.getRestaurant_approve())) {
+	        	System.out.println("해당 음식점은 승인 요청을 한 음식점이 아닙니다.");
+	        	return;
+	        }
 			
-			rdao.apporveRestaurant(id, approve);
+			do {
+				System.out.print("승인(Y) / 거부(N) ? ");
+				approve = br.readLine();				
+			} while(!approve.equalsIgnoreCase("Y") && !approve.equalsIgnoreCase("N"));
+			
 			if(approve.equalsIgnoreCase("Y")) {
+				rdao.apporveRestaurant(id, approve);
 				System.out.println("등록 요청이 승인되었습니다.");
 			} else {
 				System.out.println("등록 요청이 거부되었습니다.");
@@ -73,25 +87,39 @@ public class AdminUI {
 	}
 	
 	public void restaurantDelete() {
+		int result = 0;
         System.out.println("\n[음식점 삭제 요청 승인]");
         String id, approve;
 		
 		try {
 			List<RestaurantDTO> list = rdao.RestaurantRequests("D");
 			for(RestaurantDTO dto : list) {
-				System.out.println("음식점 코드 : " + dto.getRestaurant_id()+ " | " + " 음식점 이름 " +dto.getRestaurant_name() + " | " 
-										+ " 허가 여부 "  + dto.getRestaurant_approve());
+				System.out.println("음식점 코드 : " + dto.getRestaurant_id()+ " | " + " 음식점 이름 : " +dto.getRestaurant_name() + " | " 
+										+ " 허가 여부 : "  + dto.getRestaurant_approve());
 			}
 
-        System.out.print("삭제 요청을 승인/거부할 음식점 ID: ");
+        System.out.print("삭제 요청을 승인/거부할 음식점 코드 : ");
         id = br.readLine();
-
-        System.out.print("삭제 요청을 승인(Y) / 거부(N): ");
-        approve = br.readLine();
+        
+        RestaurantDTO dto = rdao.findByIdrestaurant(id);
+        if(dto == null) {
+        	System.out.println("해당 음식점이 존재하지 않습니다.");
+        	return;
+        }
+        
+        if(!"D".equalsIgnoreCase(dto.getRestaurant_approve())) {
+        	System.out.println("해당 음식점은 삭제 요청을 한 음식점이 아닙니다.");
+        	return;
+        }
+        
+        do {
+        	System.out.print("삭제 요청을 승인(Y) / 거부(N): ");
+        	approve = br.readLine();        	
+        } while(!approve.equalsIgnoreCase("Y") && !approve.equalsIgnoreCase("N"));
 
         
             if (approve.equalsIgnoreCase("Y")) {
-            	int result = rdao.deleteRestaurant(id);
+            	result = rdao.deleteRestaurant(id);
             	if(result > 0) {
             		System.out.println("음식점 삭제가 완료되었습니다.");
             	} else {
@@ -106,6 +134,7 @@ public class AdminUI {
 		
 		System.out.println();
     }
+
 	
 	public void reservationlist() {
 		System.out.println("\n[음식점 리스트 확인]");
@@ -115,18 +144,18 @@ public class AdminUI {
 	public void memberlist() {
 		System.out.println("\n[회원리스트]");
 		try {
-			List<MemberDTO> list = memberdao.listMember();
-			System.out.println("아이디\t비밀번호\t이름\t생년월일\t\t전화번호\t\t이메일");
-			for(MemberDTO dto : list) {
-				System.out.print(dto.getMember_id() + "\t");
-				System.out.print(dto.getPwd() + "\t");
-				System.out.print(dto.getName() + "\t");
-				System.out.print(dto.getBirth() + "\t");
-				System.out.print(dto.getTel() + "\t");
-				System.out.print(dto.getEmail() + "\n");
-			}
 			
 			while(true) {
+				List<MemberDTO> list = memberdao.listMember();
+				System.out.println("\n아이디\t비밀번호\t이름\t생년월일\t\t전화번호\t\t이메일");
+				for(MemberDTO dto : list) {
+					System.out.print(dto.getMember_id() + "\t");
+					System.out.print(dto.getPwd() + "\t");
+					System.out.print(dto.getName() + "\t");
+					System.out.print(dto.getBirth() + "\t");
+					System.out.print(dto.getTel() + "\t");
+					System.out.print(dto.getEmail() + "\n");
+				}
 				int ch1;
 				String ch2 = null;
 				
@@ -196,24 +225,23 @@ public class AdminUI {
 		
 		List<CategoryDTO> list = categorydao.listCategory();
 		
+		System.out.println("카테고리 아이디\t카테고리 이름");
+		System.out.println("----------------------------");
+		for(CategoryDTO dto : list) {
+			System.out.print(dto.getCategory_id() + "\t\t");
+			System.out.print(dto.getCategory_name() + "\n");
+		}
+		System.out.println();
 		
 		try {
 			int ch;
 			
 			do {
-				System.out.println("카테고리 아이디\t카테고리 이름");
-				System.out.println("----------------------------");
-				for(CategoryDTO dto : list) {
-					System.out.print(dto.getCategory_id() + "\t\t");
-					System.out.print(dto.getCategory_name() + "\n");
-				}
-				System.out.println();
-				
 				System.out.print("1.카테고리 추가 2.카테고리 수정 3.카테고리 삭제 4.뒤로가기 => ");
 				ch = Integer.parseInt(br.readLine());
 					
 				switch(ch) {
-				case 1: categoryUI.insert(); break;
+				case 1: categoryUI.insert();; break;
 				case 2: categoryUI.update(); break;
 				case 3: categoryUI.delete(); break;
 				case 4: System.out.println(); return;
@@ -223,6 +251,7 @@ public class AdminUI {
 			e.printStackTrace();
 		}
 	}
+	
 	
 	public void reviewlist() {
 		int ch;
@@ -256,4 +285,3 @@ public class AdminUI {
 	
 	
 }
-
