@@ -124,6 +124,8 @@ public class RestaurantUImember {
 	
 	public void findByrestaurant_details(String category_id) {
 		System.out.println("\n[음식점 상세 정보 검색]");
+		member_ReviewUI mrui = new member_ReviewUI(loginInfo);
+		MenuUI mui = new MenuUI(null);
 		
 		try {
 			System.out.print("1.오픈/마감시간 2.메뉴/가격 3.리뷰 4.뒤로가기 => ");
@@ -131,8 +133,8 @@ public class RestaurantUImember {
 			
 			switch(ch) {
 			case "1": searchOpenClose(category_id); break;
-			case "2": break;
-			case "3": break;
+			case "2": mui.member_menu(); break;
+			case "3": mrui.member_restaurantResearch(); break;
 			case "4": System.out.println(); return;
 			}
 			

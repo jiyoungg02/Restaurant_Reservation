@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.List;
 
+
 public class ReservationListUI {
 	private LoginInfo login = new LoginInfo();
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -13,6 +14,7 @@ public class ReservationListUI {
 	public ReservationListUI(LoginInfo login) {
 		this.login = login;
 	}
+	
 
 	protected void menu() {
 		int ch;
@@ -47,7 +49,8 @@ public class ReservationListUI {
 
 	public void reservationlist_use() {
 		System.out.println("[이용한 예약 목록]");
-
+		member_ReviewUI mui = new member_ReviewUI(login);
+		
 		dao.updateExpiredReservations();
 
 		String loginId = login.loginMember().getMember_id();
@@ -65,7 +68,7 @@ public class ReservationListUI {
 		int ch;
 
 		System.out.println("이용한 예약 목록");
-
+		
 		while (true) {
 			try {
 				System.out.print("1.리뷰작성 2.리뷰 수정 3.리뷰 삭제 4. 뒤로가기 =>");
@@ -76,15 +79,9 @@ public class ReservationListUI {
 				}
 
 				switch (ch) {
-				case 1:
-					//Review_insert();
-					break;
-				case 2:
-					//Review_update();
-					break;
-				case 3:
-					//Review_delete();
-					break;
+				case 1: mui.insertReview(); break;
+				case 2: mui.updateReview(); break;
+				case 3: mui.deleteReview(); break;
 				default:
 					System.out.println("잘못된 번호입니다. 다시 선택하세요");
 				}

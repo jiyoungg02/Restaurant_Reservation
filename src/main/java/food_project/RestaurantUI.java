@@ -9,6 +9,7 @@ public class RestaurantUI {
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private RestaurantDAO rdao = new RestaurantDAO();
 	private LoginInfo2 loginInfo = null;
+	private RestaurantUIowner rUIo = new RestaurantUIowner(loginInfo);
 	
 	public RestaurantUI(LoginInfo2 ologin) {
 		this.loginInfo = ologin;
@@ -119,6 +120,9 @@ public class RestaurantUI {
 		RestaurantDTO dto = new RestaurantDTO();
 		
 		try {
+			
+			rUIo.listApprovedRestaurant();
+			
 			System.out.print("수정할 음식점 코드 ? ");
 			dto.setRestaurant_id(br.readLine());
 			

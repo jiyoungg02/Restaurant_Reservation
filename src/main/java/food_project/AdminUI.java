@@ -2,14 +2,13 @@ package food_project;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.List;;
+import java.util.List;
 
 public class AdminUI {
 	private BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
 	private MemberDAO memberdao = new MemberDAO();
 	private AdminDAO adao = new AdminDAO();
 	private RestaurantDAO rdao = new RestaurantDAO();
-	// private ReviewDAO reviewdao = new ReviewDAO();
 	private LoginInfo loginInfo = null;
 	private OwnerDAO ownerdao = new OwnerDAO();
 	private CategoryDAO categorydao = new CategoryDAO();
@@ -19,8 +18,7 @@ public class AdminUI {
 		this.loginInfo = loginInfo;
 	}
 	
-	
-	
+
 	public void permission() {
 		int ch;
 		System.out.println("\n[음식점 허가]");
@@ -141,21 +139,22 @@ public class AdminUI {
 		
 	}
 
-	public void memberlist() {
-		System.out.println("\n[회원리스트]");
-		try {
-			
-			while(true) {
-				List<MemberDTO> list = memberdao.listMember();
-				System.out.println("\n아이디\t비밀번호\t이름\t생년월일\t\t전화번호\t\t이메일");
-				for(MemberDTO dto : list) {
-					System.out.print(dto.getMember_id() + "\t");
-					System.out.print(dto.getPwd() + "\t");
-					System.out.print(dto.getName() + "\t");
-					System.out.print(dto.getBirth() + "\t");
-					System.out.print(dto.getTel() + "\t");
-					System.out.print(dto.getEmail() + "\n");
-				}
+    public void memberlist() {
+        System.out.println("\n[회원리스트]");
+        try {
+            List<MemberDTO> list = memberdao.listMember();
+            System.out.println("\n아이디\t비밀번호\t이름\t생년월일\t\t전화번호\t\t이메일");
+            for(MemberDTO dto : list) {
+                System.out.print(dto.getMember_id() + "\t");
+                System.out.print(dto.getPwd() + "\t");
+                System.out.print(dto.getName() + "\t");
+                System.out.print(dto.getBirth() + "\t");
+                System.out.print(dto.getTel() + "\t");
+                System.out.print(dto.getEmail() + "\n");
+            }
+            
+            
+            while(true) {
 				int ch1;
 				String ch2 = null;
 				
@@ -193,8 +192,6 @@ public class AdminUI {
 				System.out.print(dto.getBirth() + "\t");
 				System.out.print(dto.getTel() + "\t");
 				System.out.print(dto.getEmail() + "\n");
-				
-				
 
 			}
 			
@@ -254,34 +251,27 @@ public class AdminUI {
 	
 	
 	public void reviewlist() {
-		int ch;
-		System.out.println("\n[리뷰 관리]");
-		
-		try {
-			do {
-				System.out.print("1.음식점검색 2.리뷰삭제 3.뒤로가기 ");
-				ch = Integer.parseInt(br.readLine());
-			} while(ch <1 || ch >3);
-			
-			switch(ch) {
-			case 1: restaurantResearch(); break;
-			case 2: reviewDelete(); break;
-			case 3: System.out.println();; return;
-			}
-		} catch (NumberFormatException e) {
-			System.out.println("원하는 번호를 입력하시오");			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	    int ch;
+	    member_ReviewUI mui  = new member_ReviewUI(loginInfo);
+	    System.out.println("\n[리뷰 관리]");
+	    try {
+	        do {
+	            System.out.print("1.음식점검색 2.리뷰삭제 3.뒤로가기 ");
+	            ch = Integer.parseInt(br.readLine());
+	        } while (ch < 1 || ch > 3);
+
+	        switch (ch) {
+	            case 1: mui.admin_restaurantResearch(); break;
+	            case 2: mui.admin_deleteReview(); break;
+	            case 3: return;
+	        }
+	    } catch (NumberFormatException e) {
+	        System.out.println("원하는 번호를 입력하시오\n");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
-	
-	public void restaurantResearch() {
-		
-	}
-	
-	public void reviewDelete() {
-		
-	}
+
 	
 	
 }

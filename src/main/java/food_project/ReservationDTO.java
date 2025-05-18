@@ -12,6 +12,8 @@ public class ReservationDTO {
 	 private String restaurant_id;
 	 private String member_id;
 	 private String restaurant_name;
+	 private String member_name;
+	 
 	public String getReservation_id() {
 		return reservation_id;
 	}
@@ -67,6 +69,12 @@ public class ReservationDTO {
 	
 	public void setRestaurant_name(String restaurant_name) {
 	    this.restaurant_name = restaurant_name;
+	}
+	public String getMember_name() {
+		return member_name;
+	}
+	public void setMember_name(String member_name) {
+		this.member_name = member_name;
 	}
 
 	 

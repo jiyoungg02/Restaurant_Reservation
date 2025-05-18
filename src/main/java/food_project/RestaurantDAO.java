@@ -499,7 +499,7 @@ public class RestaurantDAO {
 			
 			rs = pstmt.executeQuery();
 			
-			if(rs.next()) {
+			while(rs.next()) {
 				RestaurantDTO dto = new RestaurantDTO();
 				
 				dto.setRestaurant_id(rs.getString("restaurant_id"));
@@ -550,6 +550,7 @@ public class RestaurantDAO {
 		        dto.setRestaurant_tel(rs.getString("restaurant_tel"));
 		        dto.setRestaurant_approve(rs.getString("restaurant_approve"));
 				
+		        list.add(dto);
 			}
 			
 			
@@ -563,7 +564,77 @@ public class RestaurantDAO {
 		return list;
 	}
 	
+	// 추가
 	
+	public List<RestaurantDTO> getRestaurantsByOwner(String ownerId) {
+	    List<RestaurantDTO> list = new ArrayList<>();
+	    PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+	    try {
+	    	sql = "SELECT restaurant_id, restaurant_name FROM Restaurant WHERE owner_id = ?";
+	    	pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, ownerId);
+	        rs = pstmt.executeQuery();
+	        
+	        while (rs.next()) {
+	            RestaurantDTO dto = new RestaurantDTO();
+	            dto.setRestaurant_id(rs.getString("restaurant_id"));
+		        dto.setRestaurant_name(rs.getString("restaurant_name"));
+	            list.add(dto);
+	        }
+	    } catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+
+		return list;
+	}
+	
+	public List<RestaurantDTO> getRestaurantsByOwnerAll(String ownerId) {
+        List<RestaurantDTO> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String sql;
+
+        try {
+            sql = "SELECT restaurant_id, restaurant_name, RESTAURANT_ADDRESS, RESTAURANT_TEL, "
+                    + "RESTAURANT_COUNT, OPENING_TIME, CLOSING_TIME, RESTAURANT_APPROVE,"
+                    + "OWNER_ID, CATEGORY_ID "
+                    + "FROM Restaurant "
+                    + "WHERE owner_id = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, ownerId);
+            rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                RestaurantDTO dto = new RestaurantDTO();
+                dto.setRestaurant_id(rs.getString("restaurant_id"));
+                dto.setRestaurant_name(rs.getString("restaurant_name"));
+                dto.setRestaurant_address(rs.getString("restaurant_address"));
+                dto.setRestaurant_tel(rs.getString("restaurant_tel"));
+                dto.setRestaurant_count(rs.getInt("restaurant_count"));
+                dto.setOpening_time(rs.getString("opening_time"));
+                dto.setClosing_time(rs.getString("closing_time"));
+                dto.setRestaurant_approve(rs.getString("restaurant_approve"));
+                dto.setOwner_id(rs.getString("owner_id"));
+                dto.setCategory_id(rs.getString("category_id"));
+                list.add(dto);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBUtil.close(rs);
+            DBUtil.close(pstmt);
+        }
+
+        return list;
+    }
+    
+    
 }
 	
 	

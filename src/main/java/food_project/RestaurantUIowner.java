@@ -39,20 +39,24 @@ public class RestaurantUIowner {
 }
 
 public void listApprovedRestaurant() {
-	System.out.println("\n[음식점 등록 요청 승인 현황]");
+	System.out.println("\n[음식점 등록 승인 여부 현황]");
 	String id = loginInfo.loginOwner().getOwner_id();
 	
 	try {
 		
 		List<RestaurantDTO> list = rdao.listApprovedRestaurant(id);
+		
 		System.out.print("음식점코드\t음식점이름\t음식점주소\t음식점번호\t승인여부\n");
 		System.out.println("---------------------------------------------------");
+		
+		
 		for(RestaurantDTO dto : list) {
 			System.out.print(dto.getRestaurant_id() + "\t");
 			System.out.print(dto.getRestaurant_name() + "\t");
 			System.out.print(dto.getRestaurant_address() + "\t");
 			System.out.print(dto.getRestaurant_tel() + "\t");
 			System.out.print(dto.getRestaurant_approve() + "\n");
+		
 		}
 		
 	} catch (Exception e) {
@@ -126,12 +130,37 @@ public void insertRestaurant() {
 }
 
 	
-	public void updateRestaurant() {
-		System.out.println("\n[음식점 상세 정보 수정]");
-		
-		RestaurantDTO dto = new RestaurantDTO();
-		
-		try {
+public void updateRestaurant() {
+        System.out.println("\n[음식점 상세 정보 수정]");
+        
+        RestaurantDTO dto = new RestaurantDTO();
+
+        String ownerId = loginInfo.loginOwner().getOwner_id();
+
+        List<RestaurantDTO> restaurants = rdao.getRestaurantsByOwnerAll(ownerId);
+
+        if (restaurants.isEmpty()) {
+            System.out.println("등록된 음식점이 없습니다.");
+            return;
+        }
+
+        System.out.println("[" + ownerId + "님 보유 음식점 목록]");
+        System.out.println("식당 번호\t\t식당 이름\t주소\t전화번호\t수용가능인원\t오픈시간\t마감시간\t허가여부\t점주아이디\t카테고리코드");
+        System.out.println("-------------------------");
+        for (RestaurantDTO r : restaurants) {
+            System.out.print(r.getRestaurant_id() + "\t\t");
+            System.out.print(r.getRestaurant_name() + "\t");
+            System.out.print(r.getRestaurant_address() + "\t");
+            System.out.print(r.getRestaurant_tel() + "\t\t");
+            System.out.print(r.getRestaurant_count() + "\t");
+            System.out.print(r.getOpening_time() + "\t");
+            System.out.print(r.getClosing_time() + "\t");
+            System.out.print(r.getRestaurant_approve() + "\t");
+            System.out.print(r.getOwner_id() + "\t");
+            System.out.println(r.getCategory_id() + "\t");
+        }
+        
+        try {  
 			System.out.print("수정할 음식점 코드 ? ");
 			dto.setRestaurant_id(br.readLine());
 			
@@ -187,7 +216,6 @@ public void insertRestaurant() {
 			
 		
 			System.out.println("수정이 완료 되었습니다.");
-			
 			
 			
 		} catch (SQLException e) {
