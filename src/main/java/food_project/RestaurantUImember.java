@@ -37,23 +37,36 @@ public class RestaurantUImember {
 	
 	
 	public void findByName() {
-		System.out.println("\n[음식점 이름 검색]");
+		System.out.println("\n[음식점명 검색]");
 		String name;
 		
 		try {
-			System.out.print("검색할 음식점 이름 ? ");
+			System.out.print("검색할 음식점명 ? ");
 			name = br.readLine();
 			
-			List<RestaurantDTO> list = rdao.RestaurantName(name);
+			List<Object> list = rdao.RestaurantName(name);
 			
-			title2();
+		
 			if(list.size() == 0) {
 				System.out.println("등록된 음식점이 없습니다.");
 				return;
 			}
-			
-			for(RestaurantDTO dto : list) {
-				print2(dto);
+			title2();
+			for(Object obj : list) {
+				if(obj instanceof RestaurantDTO) {
+					RestaurantDTO dto = (RestaurantDTO)obj; 
+					System.out.print(dto.getRestaurant_name() + "\t");        
+					System.out.print(dto.getRestaurant_address() + "\t");     
+					System.out.print(dto.getRestaurant_tel() + "\t");         
+					System.out.print(dto.getRestaurant_count() + "\t");      
+					System.out.print(dto.getOpening_time() + "\t");           
+					System.out.print(dto.getClosing_time() + "\t"); 
+					
+				} else if(obj instanceof CategoryDTO) {
+					CategoryDTO cdto = (CategoryDTO)obj;
+					System.out.print(cdto.getCategory_name() + "\t");
+					
+				}
 			}
 			
 		} catch (Exception e) {
@@ -72,16 +85,29 @@ public class RestaurantUImember {
 			System.out.print("검색할 음식점 주소 ? ");
 			address = br.readLine();
 			
-			List<RestaurantDTO> list = rdao.RestaurantAddress(address);
+			List<Object> list = rdao.RestaurantAddress(address);
 			
-			title2();
 			if(list.size() == 0) {
 				System.out.println("음식점 주소가 없습니다.");
 				return;
 			}
 			
-			for(RestaurantDTO dto : list) {
-				print2(dto);
+			title2();
+			for(Object obj : list) {
+				if(obj instanceof RestaurantDTO) {
+					RestaurantDTO dto = (RestaurantDTO)obj; 
+					System.out.print(dto.getRestaurant_name() + "\t");        
+					System.out.print(dto.getRestaurant_address() + "\t");     
+					System.out.print(dto.getRestaurant_tel() + "\t");         
+					System.out.print(dto.getRestaurant_count() + "\t");      
+					System.out.print(dto.getOpening_time() + "\t");           
+					System.out.print(dto.getClosing_time() + "\t"); 
+					
+				} else if(obj instanceof CategoryDTO) {
+					CategoryDTO cdto = (CategoryDTO)obj;
+					System.out.print(cdto.getCategory_name() + "\t");
+					
+				}
 			}
 			
 			
@@ -90,7 +116,6 @@ public class RestaurantUImember {
 		}
 		System.out.println();
 	}
-	
 	public void Allrestaurant() {
 		System.out.println("\n[음식점 전체 리스트]");
 		
@@ -107,11 +132,11 @@ public class RestaurantUImember {
 	
 	
 	public void findByCategoryIdrestaurant(String category_id) {
-		System.out.println("\n[음식점 리스트]");
+		System.out.println("\n[" + Category(category_id) + "음식점 리스트]");
 		
 		List<RestaurantDTO> list = rdao.findByCategoryIdrestaurant(category_id);
 		
-		System.out.println("음식점코드\t음식점이름\t위치\t전화번호");
+		System.out.println("음식점코드\t음식점명\t위치\t전화번호");
 		for(RestaurantDTO dto : list) {
 			System.out.print(dto.getRestaurant_id() + "\t");
 			System.out.print(dto.getRestaurant_name() + "\t");
@@ -120,6 +145,21 @@ public class RestaurantUImember {
 		}
 		System.out.println();
 		
+	}
+	
+	public String Category(String category_id) {
+		String s = null;
+		switch(category_id) {
+		case "1" : s = "한식 ";break;
+		case "2" : s = "일식 ";break;
+		case "3" : s = "중식 ";break;
+		case "4" : s = "양식 ";break;
+		case "5" : s = "분식 ";break;
+		case "6" : s = "디저트 ";break;
+		case "7" : s = "기타 ";break;
+	}
+	
+		return s;
 	}
 	
 	public void findByrestaurant_details(String category_id) {
@@ -147,11 +187,11 @@ public class RestaurantUImember {
 		
 		
 		try {
-			System.out.print("오픈/마감 시간 검색할 음식점 이름 ? ");
+			System.out.print("오픈/마감 시간 검색할 음식점명 ? ");
 			String name = br.readLine();
 			
 			List<RestaurantDTO> list = rdao.RestaurantDetails(name, category_id);
-			System.out.println("음식점이름\t오픈시간\t마감시간");
+			System.out.println("음식점명\t오픈시간\t마감시간");
 			System.out.println("-------------------------");
 			for(RestaurantDTO dto : list) {
 				System.out.print(dto.getRestaurant_name() + "\t");
@@ -189,10 +229,10 @@ public class RestaurantUImember {
 	
 	
 	public void title() {
-		System.out.print("코드\t");
-		System.out.print("이름\t");
+		System.out.print("음식점코드\t");
+		System.out.print("음식점명\t");
 		System.out.print("지역\t");
-		System.out.print("번호\t\t");		
+		System.out.print("전화번호\t\t");		
 		System.out.print("수용인원\t");		
 		System.out.print("오픈시간\t");		
 		System.out.print("마감시간\t");
@@ -203,13 +243,13 @@ public class RestaurantUImember {
 	}
 	
 	public void title2() {
-		System.out.print("이름\t");
+		System.out.print("음식점명\t");
 		System.out.print("지역\t");
-		System.out.print("번호\t\t");		
+		System.out.print("전화번호\t\t");		
 		System.out.print("수용인원\t");		
 		System.out.print("오픈시간\t");		
 		System.out.print("마감시간\t");
-		System.out.println("카테고리코드");	
+		System.out.println("카테고리명");	
 		System.out.println("----------------------------------------------------------------");
 	}
 	

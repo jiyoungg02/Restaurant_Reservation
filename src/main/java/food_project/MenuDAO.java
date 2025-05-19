@@ -157,10 +157,10 @@ public class MenuDAO {
 	    	conn.setAutoCommit(false);
 	    	
 	    	sql = "DELETE FROM Menu "
-	    		  + " WHERE menu_name =? AND restaurant_id = (SELECT restaurant_id FROM Restaurant WHERE restaurant_name = ? AND owner_id = ?) ";
+	    		  + " WHERE menu_id = ? AND restaurant_id = (SELECT restaurant_id FROM Restaurant WHERE restaurant_name = ? AND owner_id = ?) ";
 	    	
 	        pstmt = conn.prepareStatement(sql);
-	        pstmt.setString(1,  dto.getMenu_name());
+	        pstmt.setString(1,  dto.getMenu_id());
 	        pstmt.setString(2, dto.getRestaurant_name());
 	        pstmt.setString(3, dto.getOwner_id());
 	        

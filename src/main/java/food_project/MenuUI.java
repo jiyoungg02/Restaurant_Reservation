@@ -8,6 +8,7 @@ import java.util.List;
 
 public class MenuUI {
 	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private RestaurantDAO restaurantDAO = new RestaurantDAO(); 
 	private MenuDAO dao = new MenuDAO();
 	
 	private LoginInfo2 loginInfo = null;
@@ -22,13 +23,29 @@ public class MenuUI {
 		try {
 			ownerId = loginInfo.loginOwner().getOwner_id();
 			
-			System.out.print("음식점 이름 ? ");
+			List<RestaurantDTO> restaurants = restaurantDAO.getRestaurantsByOwner(ownerId);
+
+	        if (restaurants.isEmpty()) {
+	            System.out.println("등록된 음식점이 없습니다.");
+	            return;
+	        }
+
+	        System.out.println("\n[" + ownerId + "님 보유 음식점 목록]");
+	        System.out.println("음식점코드\t\t음식점명");
+	        System.out.println("-------------------------");
+	    
+	        for (RestaurantDTO r : restaurants) {
+	            System.out.println(r.getRestaurant_id() + "\t\t" + r.getRestaurant_name());
+	        }
+			System.out.println();
+			
+			System.out.print("음식점명 ? ");
 			restaurant_name = br.readLine();
 			
-			List<MenuDTO> list = dao.owner_listMenu(ownerId, restaurant_name);
+			List<MenuDTO> list2 = dao.owner_listMenu(ownerId, restaurant_name);
 			
 			boolean found = false;
-			for (MenuDTO dto : list) {
+			for (MenuDTO dto : list2) {
 			    if (dto.getOwner_id().equals(ownerId) && dto.getRestaurant_name().equals(restaurant_name)) {
 			        found = true;
 			        break;
@@ -43,13 +60,13 @@ public class MenuUI {
 			
 			System.out.println("---------------------");
 			
-			for(MenuDTO dto : list) {
+			for(MenuDTO dto : list2) {
 				System.out.print(dto.getMenu_id() + "\t");
 				System.out.print(dto.getMenu_name() + "\t");
 				System.out.println(dto.getMenu_price());
 			}
 		} catch (NullPointerException e) {
-			System.out.println("찾으실 음식점을 입력해주세요.\n");
+			System.out.println("찾으실 음식점명을 입력해주세요.\n");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -64,7 +81,7 @@ public class MenuUI {
 		try {
 			ownerId = loginInfo.loginOwner().getOwner_id();
 			
-			System.out.print("레스토랑 이름 ? ");
+			System.out.print("음식점명 ? ");
 			restaurantName = br.readLine().trim();
 			
 			restaurantId = dao.getRestaurantId(restaurantName, ownerId);
@@ -79,10 +96,10 @@ public class MenuUI {
 
 	        System.out.println("----------------------------------------------");
 
-	        System.out.print("등록할 메뉴 아이디 ? ");
+	        System.out.print("등록할 메뉴 코드 ? ");
 	        dto.setMenu_id(br.readLine().trim());
 
-	        System.out.print("등록할 메뉴 이름 ? ");
+	        System.out.print("등록할 메뉴명 ? ");
 	        dto.setMenu_name(br.readLine());
 
 	        System.out.print("가격 ? ");
@@ -91,42 +108,7 @@ public class MenuUI {
 	        dao.insertMenu(dto);
 
 	        System.out.println("메뉴 등록 성공...\n");
-			
-//			List<MenuDTO> list = dao.owner_listMenu(ownerId, restaurantName);
-//			
-//			
-//			boolean found = false;		
-//			for (MenuDTO m : list) {
-//				if (ownerId.equals(m.getOwner_id()) && restaurantName.equals(m.getRestaurant_name())) {
-//	                found = true;
-//	                break;
-//	            }
-//	        }
-//			
-//			if (!dao.restaurantExists(ownerId, restaurantName)) {
-//			    System.out.println("등록되지 않은 음식점입니다.\n");
-//			    return;
-//			}
-//			
-//
-//			dto.setOwner_id(ownerId);
-//			dto.setRestaurant_name(restaurantName);
-//			
-//			System.out.println("----------------------------------------------");
-//			
-//			System.out.print("등록할 메뉴 아이디 ? ");
-//			dto.setMenu_id(br.readLine().trim());
-//			
-//			System.out.print("등록할 메뉴 이름 ? ");
-//			dto.setMenu_name(br.readLine());
-//			
-//			System.out.print("가격 ? ");
-//			dto.setMenu_price(Integer.parseInt(br.readLine()));
-//			
-//			dao.insertMenu(dto);
-//			
-//			System.out.println("메뉴 등록 성공...\n");
-			
+
 		} catch (SQLException e) {
 			System.out.println(e.toString());
 		} catch (IOException e) {
@@ -144,7 +126,7 @@ public class MenuUI {
 		try {
 			ownerId = loginInfo.loginOwner().getOwner_id();
 			
-			System.out.print("레스토랑 이름 ? ");
+			System.out.print("음식점명 ? ");
 			restaurantName = br.readLine().trim();
 			
 			restaurantId = dao.getRestaurantId(restaurantName, ownerId);
@@ -158,7 +140,7 @@ public class MenuUI {
 	        dto.setRestaurant_id(restaurantId);
 			
 			
-			System.out.print("메뉴 아이디 ? ");
+			System.out.print("메뉴 코드 ? ");
 			menuId = br.readLine();
 			dto.setMenu_id(menuId);
 			
@@ -169,7 +151,7 @@ public class MenuUI {
 			
 			System.out.println("----------------------------------------------");
 			
-			System.out.print("수정할 메뉴 이름 ? ");
+			System.out.print("수정할 메뉴명 ? ");
 			dto.setMenu_name(br.readLine());
 			
 			System.out.print("수정할 가격 ? ");
@@ -191,12 +173,12 @@ public class MenuUI {
 	public void deleteMenu() {
 		System.out.println("\n[메뉴 삭제]");
 		MenuDTO dto = new  MenuDTO ();
-		String ownerId, restaurantName, menuName;
+		String ownerId, restaurantName;
 				
 		try {
 			ownerId = loginInfo.loginOwner().getOwner_id();
 			
-			System.out.print("레스토랑 이름 ? ");
+			System.out.print("음식점명 ? ");
 			restaurantName = br.readLine();
 			
 			List<MenuDTO> list = dao.owner_listMenu(ownerId, restaurantName);
@@ -224,9 +206,8 @@ public class MenuUI {
 			
 			System.out.println("----------------------------------------------");
 			
-			System.out.print("삭제할 메뉴이름 ? ");
-			menuName = br.readLine();
-			dto.setMenu_name(menuName);
+			System.out.print("삭제할 메뉴코드 ? ");
+			dto.setMenu_id(br.readLine());
 			
 			int result = dao.deleteMenu(dto);
 			
@@ -249,7 +230,7 @@ public class MenuUI {
 		String restaurant_name;
 		System.out.println("\n[메뉴 조회]");
 		try {
-			System.out.print("음식점 이름 ? ");
+			System.out.print("음식점명 ? ");
 			restaurant_name = br.readLine();
 			
 			List<MenuDTO> list = dao.member_listMenu(restaurant_name);

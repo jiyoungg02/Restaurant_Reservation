@@ -3,6 +3,7 @@ package food_project;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 
@@ -19,7 +20,7 @@ public class MemberUI {
 		
 	
 	public void restaurantList() {
-		System.out.println("\n음식점 리스트 확인");
+		System.out.println("\n[음식점 리스트 확인]");
 		
 		try {
 			//boolean b = true;
@@ -47,7 +48,7 @@ public class MemberUI {
 	}
 	
 	public void restaurantDetail(String category_id) {
-		System.out.println("\n음식점 상세정보 확인");
+		System.out.println("\n[음식점 상세정보 확인]");
 		String ch;
 		try {
 			
@@ -75,7 +76,7 @@ public class MemberUI {
 		System.out.println("\n[즐겨찾기 등록]");
 		String id;
 		try {
-			System.out.print("음식점 아이디 ? ");
+			System.out.print("음식점 코드 ? ");
 			id = br.readLine();
 			
 			dao.insertFavorites(loginInfo.loginMember().getMember_id(),id);
@@ -86,6 +87,8 @@ public class MemberUI {
 				System.out.println("즐겨찾기 등록 실패...");
 			}
 			
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println("이미 등록된 데이터입니다. 중복된 항목을 확인해주세요.");	
 		} catch (NumberFormatException e) {
 			System.out.println("잘못입력하셨습니다.");
 		} catch (SQLException e) {
@@ -129,7 +132,7 @@ public class MemberUI {
     			case 2: return;
     			
     			default:
-                    System.out.println("잘못된 번호입니다. 다시 선택하세요.");
+                    System.out.println("잘못된 코드입니다. 다시 선택하세요.");
     			}
 				
 			} catch (Exception e) {
@@ -141,7 +144,7 @@ public class MemberUI {
 		System.out.println("\n[즐겨찾기 삭제]");
 		String id;
 		try {
-			System.out.print("[삭제할 음식점 아이디] ?");
+			System.out.print("삭제할 음식점 코드 ?");
 			id = br.readLine();
 			
 			dao.deleteFavorites(loginInfo.loginMember().getMember_id(),id);
@@ -163,31 +166,6 @@ public class MemberUI {
 	}
 	
 	
-//	public void reservationList() {
-//		int ch;
-//		System.out.println("예약 목록 확인");
-//		while(true) {
-//			try {
-//				System.out.println("1.이용한 예약목록 2.이용예정 예약 목록 3.뒤로가기");
-//				ch = Integer.parseInt(br.readLine());
-//				
-//				if(ch == 3 ) {
-//					return;
-//				}
-//				
-//				switch(ch) {
-//				case 1: restaurantList(); break;
-//    			case 2: restaurantSearch(); break;
-//    			default:
-//                    System.out.println("잘못된 번호입니다. 다시 선택하세요.");
-//    			}
-//			} catch(Exception e) {
-//				
-//			}
-//		}
-//			
-//	}
-	
 	
 		// 개인정보 수정
 	public void memberUpdate() { // 추가
@@ -195,7 +173,7 @@ public class MemberUI {
 		try {
 			MemberDTO dto = loginInfo.loginMember();
 			
-			System.out.print("패스워드 ? ");
+			System.out.print("비밀번호 ? ");
 			dto.setPwd(br.readLine());
 
 			System.out.print("생년월일 ? ");
@@ -234,7 +212,7 @@ public class MemberUI {
 			
 			if(ch == 'y' || ch == 'Y') {
 				dao.deleteMember(loginInfo.loginMember().getMember_id());
-				System.out.println("삭제 완료되었습니다.");
+				System.out.println("탈퇴 완료되었습니다.");
 				MainUI ui = new MainUI(); 
 				loginInfo.logout();
 				ui.menu();

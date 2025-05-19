@@ -25,7 +25,7 @@ public class GuestUI {
 			System.out.print("아이디 ? ");
 			dto.setMember_id(br.readLine());
 
-			System.out.print("패스워드 ? ");
+			System.out.print("비밀번호 ? ");
 			dto.setPwd(br.readLine());
 
 			System.out.print("이름 ? ");
@@ -75,12 +75,12 @@ public class GuestUI {
 		try {
 			System.out.print("아이디 ? ");
 			id = br.readLine();
-			System.out.print("패스워드 ? ");
+			System.out.print("비밀번호 ? ");
 			pwd = br.readLine();
 			
 			MemberDTO dto = dao.findById(id);
 			if(dto == null || ! dto.getPwd().equals(pwd)) {
-				System.out.println("아이디 또는 패스워드가 일치하지 않습니다.");
+				System.out.println("아이디 또는 비밀번호가 일치하지 않습니다.");
 				return;
 			}
 			

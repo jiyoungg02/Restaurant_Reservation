@@ -25,13 +25,13 @@ public class ReservationUI {
 	        boolean validRestaurantId = false;
 
 	        while (!validRestaurantId) {
-	            System.out.print("예약할 음식점 ID 입력해주세요 (당일 예약은 불가능합니다): ");
+	            System.out.print("\n예약할 음식점코드를 입력해주세요 (당일 예약은 불가능합니다): ");
 	            restaurantId = br.readLine();
 
 	            validRestaurantId = dao.isRestaurantIdValid(restaurantId);
 
 	            if (!validRestaurantId) {
-	                System.out.println("유효하지 않은 음식점 ID입니다. 다시 입력해주세요.");
+	                System.out.println("유효하지 않은 음식점코드입니다. 다시 입력해주세요.");
 	            }
 	        }
 
@@ -122,7 +122,7 @@ public class ReservationUI {
 
 	        dao.insertReservation(dto);
 
-	        System.out.println("예약이 성공적으로 완료되었습니다!");
+	        System.out.println("예약이 성공적으로 완료되었습니다!\n");
 
 	    } catch (Exception e) {
 	        e.printStackTrace();

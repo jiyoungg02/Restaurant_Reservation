@@ -354,18 +354,20 @@ public class RestaurantDAO {
 	
 	
 	// 음식점 이름 검색
-	public List<RestaurantDTO> RestaurantName(String name) {
-		List<RestaurantDTO> list = new ArrayList<RestaurantDTO>();
+	// 음식점 이름 검색
+	public List<Object> RestaurantName(String name) {
+		List<Object> list = new ArrayList<Object>();
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
 		
 		try {
-			sql = "SELECT restaurant_name, restaurant_address, restaurant_tel, restaurant_count, "
-					+ " opening_time, closing_time, category_id "
-					+ " FROM restaurant "
-					+ " WHERE restaurant_approve = 'Y' AND INSTR(restaurant_name, ?) >= 1";
+			sql = "SELECT r.restaurant_name, r.restaurant_address, r.restaurant_tel, "
+				    + "r.restaurant_count, r.opening_time, r.closing_time, c.category_name "
+				    + "FROM restaurant r "
+				    + "LEFT OUTER JOIN category c ON r.category_id = c.category_id "
+				    + "WHERE r.restaurant_approve = 'Y' AND INSTR(r.restaurant_name, ?) >= 1";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, name);
@@ -374,6 +376,7 @@ public class RestaurantDAO {
 			
 			while(rs.next()) {
 				RestaurantDTO dto = new RestaurantDTO();
+				CategoryDTO cdto = new CategoryDTO();
 				
 				dto.setRestaurant_name(rs.getString("restaurant_name"));
 				dto.setRestaurant_address(rs.getString("restaurant_address"));
@@ -381,9 +384,10 @@ public class RestaurantDAO {
 				dto.setRestaurant_count(rs.getInt("restaurant_count"));
 				dto.setOpening_time(rs.getString("opening_time"));
 				dto.setClosing_time(rs.getString("closing_time"));
-				dto.setCategory_id(rs.getString("category_id"));
+				cdto.setCategory_name(rs.getString("category_name"));
 				
 				list.add(dto);
+				list.add(cdto);
 			}
 			
 		} catch (SQLException e) {
@@ -398,17 +402,18 @@ public class RestaurantDAO {
 	}
 	
 	// 음식점 주소 검색
-	public List<RestaurantDTO> RestaurantAddress(String address) {
-		List<RestaurantDTO> list = new ArrayList<RestaurantDTO>();
+	public List<Object> RestaurantAddress(String address) {
+		List<Object> list = new ArrayList<Object>();
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
 		
 		try {
-			sql = "SELECT restaurant_name, restaurant_address, restaurant_tel, restaurant_count, "
-					+ " opening_time, closing_time, category_id "
-					+ " FROM restaurant "
+			sql = "SELECT r.restaurant_name, r.restaurant_address, r.restaurant_tel, "
+				    + "r.restaurant_count, r.opening_time, r.closing_time, c.category_name "
+				    + "FROM restaurant r "
+				    + "LEFT OUTER JOIN category c ON r.category_id = c.category_id "
 					+ " WHERE restaurant_approve = 'Y' AND INSTR(restaurant_address, ?) >= 1";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -418,6 +423,7 @@ public class RestaurantDAO {
 			
 			while(rs.next()) {
 				RestaurantDTO dto = new RestaurantDTO();
+				CategoryDTO cdto = new CategoryDTO();
 				
 				dto.setRestaurant_name(rs.getString("restaurant_name"));
 				dto.setRestaurant_address(rs.getString("restaurant_address"));
@@ -425,9 +431,10 @@ public class RestaurantDAO {
 				dto.setRestaurant_count(rs.getInt("restaurant_count"));
 				dto.setOpening_time(rs.getString("opening_time"));
 				dto.setClosing_time(rs.getString("closing_time"));
-				dto.setCategory_id(rs.getString("category_id"));
+				cdto.setCategory_name(rs.getString("category_name"));
 				
 				list.add(dto);
+				list.add(cdto);
 			}
 			
 			
@@ -605,7 +612,7 @@ public class RestaurantDAO {
                     + "RESTAURANT_COUNT, OPENING_TIME, CLOSING_TIME, RESTAURANT_APPROVE,"
                     + "OWNER_ID, CATEGORY_ID "
                     + "FROM Restaurant "
-                    + "WHERE owner_id = ?";
+                    + "WHERE RESTAURANT_APPROVE = 'Y' AND owner_id = ?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, ownerId);
             rs = pstmt.executeQuery();

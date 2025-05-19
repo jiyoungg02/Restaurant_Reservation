@@ -24,7 +24,7 @@ public class OguestUI {
 			System.out.print("아이디 ? ");
 			dto.setOwner_id(br.readLine());
 
-			System.out.print("패스워드 ? ");
+			System.out.print("비밀번호 ? ");
 			dto.setOwner_pwd(br.readLine());
 
 			System.out.print("이름 ? ");
@@ -74,12 +74,12 @@ public class OguestUI {
 		try {
 			System.out.print("아이디 ? ");
 			id = br.readLine();
-			System.out.print("패스워드 ? ");
+			System.out.print("비밀번호 ? ");
 			pwd = br.readLine();
 			
 			OwnerDTO dto = odao.findById(id);
 			if(dto == null || ! dto.getOwner_pwd().equals(pwd)) {
-				System.out.println("아이디 또는 패스워드가 일치하지 않습니다.");
+				System.out.println("아이디 또는 비밀번호가 일치하지 않습니다.");
 				return;
 			}
 			

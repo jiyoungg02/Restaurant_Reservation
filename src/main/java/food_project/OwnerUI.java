@@ -30,15 +30,15 @@ public class OwnerUI {
             return;
         }
 
-        System.out.println("[" + ownerId + "님 보유 음식점 목록]");
-        System.out.println("식당 번호\t\t식당 이름");
+        System.out.println("\n[" + ownerId + "님 보유 음식점 목록]");
+        System.out.println("음식점코드\t\t음식점명");
         System.out.println("-------------------------");
         for (RestaurantDTO r : restaurants) {
             System.out.println(r.getRestaurant_id() + "\t\t" + r.getRestaurant_name());
         }
 
         try {
-            System.out.print("\n조회할 음식점 번호 입력: ");
+            System.out.print("\n조회할 음식점코드 입력: ");
             int restaurantId = Integer.parseInt(br.readLine());
 
             while (true) {
@@ -70,7 +70,8 @@ public class OwnerUI {
     }
 
 	private void printReservationsByUsedStatus(String ownerId, String restaurantId, String isUsed) {
-	    try {
+	    
+		try {
 	        List<ReservationDTO> reservations = dao1.getReservationsByUsedStatus(ownerId, restaurantId, isUsed);
 
 	        String title = isUsed.equals("Y") ? "[사용한 예약 목록]" : "[예정 중인 예약 목록]";
@@ -91,7 +92,7 @@ public class OwnerUI {
 
 	
 	public void review() {
-		System.out.println("\n--리뷰조회--");
+		System.out.println("\n[리뷰조회]");
 		int ch;
 		
 		owner_ReviewUI rui = new owner_ReviewUI(loginInfo);
@@ -115,22 +116,24 @@ public class OwnerUI {
 	
 	public void menu() {
 		System.out.println("\n[메뉴확인]");
-		int ch;
+		String ch;
 		
 		MenuUI mui = new MenuUI(loginInfo);
 		mui.owner_menu();
 		
 		try {
-			do {
+			while(true) {
+				
 				System.out.print("1.메뉴등록 2.메뉴수정 3.메뉴삭제 4.뒤로가기 ");
-				ch = Integer.parseInt(br.readLine());
-			} while(ch <1 || ch > 4);	
+				ch = br.readLine();
+			
 				switch(ch) {
-					case 1: mui.owner_insertMenu(); break;
-					case 2: mui.owner_updateMenu(); break;
-					case 3: mui.deleteMenu(); break;
-					case 4: return;
+					case "1": mui.owner_insertMenu(); break;
+					case "2": mui.owner_updateMenu(); break;
+					case "3": mui.deleteMenu(); break;
+					case "4": return;
 				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -142,7 +145,7 @@ public class OwnerUI {
 		try {
 			OwnerDTO dto = loginInfo.loginOwner();
 			
-			System.out.print("패스워드 ? ");
+			System.out.print("비밀번호 ? ");
 			dto.setOwner_pwd(br.readLine());
 			
 			System.out.print("생년월일 ? ");
@@ -196,9 +199,9 @@ public class OwnerUI {
 	}
 	
 	private void reservation_title() {
-	    System.out.print("예약번호\t\t\t");
-	    System.out.print("예약자이름\t\t");
-	    System.out.print("음식점 이름\t");
+	    System.out.print("예약코드\t\t\t");
+	    System.out.print("예약자명\t\t");
+	    System.out.print("음식점명\t");
 	    System.out.print("예약날짜\t\t");
 	    System.out.print("예약시간\t\t");
 	    System.out.println("예약인원\t\t");

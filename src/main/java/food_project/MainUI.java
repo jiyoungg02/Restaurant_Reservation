@@ -45,6 +45,7 @@ public class MainUI {
 		do {
 			ch = 0;
 			try {
+				System.out.println("\n[메인 메뉴]");
 				System.out.print("1.로그인 2.회원가입 3.점주로그인 4.점주가입 5.종료 => ");
 				ch = Integer.parseInt(br.readLine());
 				
@@ -71,7 +72,7 @@ public class MainUI {
 	public void menuMember() {
 		int ch;
 		try {
-			System.out.println("회원 로그인");
+			System.out.println("\n[회원 메뉴]");
 			do {
 				System.out.println("1.음식점리스트확인 2.음식점검색 3.즐겨찾기리스트확인");
 				System.out.print("4.예약목록확인 5.개인정보 수정 6.회원탈퇴. 7.로그아웃 => ");
@@ -95,7 +96,7 @@ public class MainUI {
 	public void menuOwner() {
 		int ch;
 		try {
-			System.out.println("점주 로그인");
+			System.out.println("\n[점주 메뉴]");
 			do {
 				System.out.print("1.예약조회 2.리뷰조회 3.메뉴확인 4.음식점 상세정보 수정 5.음식점 등록/삭제 요청 6.개인정보수정 7.탈퇴 8.로그아웃 => ");
 				ch = Integer.parseInt(br.readLine());
@@ -118,10 +119,10 @@ public class MainUI {
 	public void menuAdmin() {
 		int ch;
 		try {
-			System.out.println("관리자 로그인");
+			System.out.println("\n[관리자 메뉴]");
 			do {
-				System.out.println("1.음식점 등록/삭제 허가 2.음식점 리스트");
-				System.out.print("3.회원리스트 4.점주 리스트 5.리뷰관리 6.카테고리 리스트 7.로그아웃 => ");
+				System.out.println("1.음식점 등록/삭제 허가 2.음식점리스트");
+				System.out.print("3.회원리스트 4.점주리스트 5.리뷰관리 6.카테고리리스트 7.로그아웃 => ");
 				ch = Integer.parseInt(br.readLine());
 			} while(ch < 1 || ch > 7);	
 				switch(ch) {

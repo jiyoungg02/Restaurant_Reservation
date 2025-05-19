@@ -17,10 +17,10 @@ public class CategoryUI {
 		try {
 			CategoryDTO dto = new CategoryDTO();
 			
-			System.out.print("카테고리 아이디 ? ");
+			System.out.print("카테고리 코드 ? ");
 			dto.setCategory_id(br.readLine());
 			
-			System.out.print("카테고리 이름 ? ");
+			System.out.print("카테고리명 ? ");
 			dto.setCategory_name(br.readLine());
 			
 			dao.insertCategory(dto);
@@ -30,7 +30,7 @@ public class CategoryUI {
 		} catch (SQLIntegrityConstraintViolationException e) {
 			// 기본키 중복, NOT NULL등의 제약조건 위반에 의한 예외 발생-무결성 제약 조건 위반
 			if(e.getErrorCode()==1) {
-				System.out.println("아이디 중복입니다.");
+				System.out.println("코드 중복입니다.");
 			} else if(e.getErrorCode()==1400){ // INSERT-NOT NULL 위반
 				System.out.println("필수 입력사항을 입력하지 않았습니다.");
 			} else {
@@ -49,17 +49,17 @@ public class CategoryUI {
 		String id;
 		
 		try {
-			System.out.print("수정할 카테고리 아이디 ? ");
+			System.out.print("수정할 카테고리 코드 ? ");
 			id = br.readLine();
 			
 			CategoryDTO dto = dao.findById(id);
 			
 			if(dto == null) {
-				System.out.println("존재하지 않는 아이디입니다.\n");
+				System.out.println("존재하지 않는 코드입니다.\n");
 				return;
 			}
 			
-			System.out.print("카테고리 이름 ? ");
+			System.out.print("카테고리명 ? ");
 			dto.setCategory_name(br.readLine());
 			
 			dao.updateCategory(dto);
@@ -84,17 +84,17 @@ public class CategoryUI {
 		char ch;
 		
 		try {
-			System.out.print("삭제할 카테고리 아이디 ? ");
+			System.out.print("삭제할 카테고리 코드 ? ");
 			id = br.readLine();
 			
 			CategoryDTO dto = dao.findById(id);
 			
 			if(dto == null) {
-				System.out.println("존재하지 않는 아이디입니다.\n");
+				System.out.println("존재하지 않는 코드입니다.\n");
 				return;
 			}
 			
-			System.out.print("카테고리를 삭제 하시겠습니까[Y/N] ? (주의 ! 해당 카테고리 번호를 가지고 있는 음식점 모두 삭제됩니다.) ");
+			System.out.print("카테고리를 삭제 하시겠습니까[Y/N] ? (주의 ! 해당 카테고리 코드를 가지고 있는 음식점 모두 삭제됩니다.) ");
 			ch = (br.readLine().trim()).charAt(0);
 			
 			if (ch == 'Y' || ch == 'y') {

@@ -25,7 +25,7 @@ public class member_ReviewUI {
 		try {
 			memberId = loginInfo.loginMember().getMember_id();
 			
-			System.out.print("예약번호 ? ");
+			System.out.print("예약코드 ? ");
 			reservationid = br.readLine();
 			
 			List<ReservationDTO> gurv = rdao.getUsedReservations(memberId);
@@ -37,7 +37,7 @@ public class member_ReviewUI {
 			    }
 			}
 			if (!found) {
-			    System.out.println("유효하지 않은 예약번호입니다.");
+			    System.out.println("유효하지 않은 예약코드입니다.");
 			   return;
 			}
 			
@@ -86,7 +86,7 @@ public class member_ReviewUI {
 		try {
 			memberId = loginInfo.loginMember().getMember_id();
 			
-			System.out.print("예약번호 ? ");
+			System.out.print("예약코드 ? ");
 			reservationid = br.readLine();
 			
 			List<ReservationDTO> ursv = rdao.getUsedReservations(memberId);
@@ -98,7 +98,7 @@ public class member_ReviewUI {
 			    }
 			}
 			if (!found) {
-			    System.out.println("유효하지 않은 예약번호입니다.\n");
+			    System.out.println("유효하지 않은 예약코드입니다.\n");
 			   return;
 			}
 			
@@ -130,7 +130,7 @@ public class member_ReviewUI {
 		try {
 			memberId = loginInfo.loginMember().getMember_id();
 			
-			System.out.print("예약번호 ? ");
+			System.out.print("예약코드 ? ");
 			reservateionId = br.readLine();
 			
 			int result = dao.deleteReview(reservateionId, memberId);
@@ -155,10 +155,10 @@ public class member_ReviewUI {
 		String memberId;
 		
 		try {
-			System.out.print("리뷰 작성한 아이디 ? ");
+			System.out.print("리뷰 작성한 회원아이디 ? ");
 			memberId = br.readLine();
 			
-			System.out.print("예약번호 ? ");
+			System.out.print("예약코드 ? ");
 			reservationId = br.readLine();
 			
 			int result = dao.deleteReview(reservationId, memberId);
@@ -181,106 +181,106 @@ public class member_ReviewUI {
 // ------------------ 관리자 음식점 검색
 	
 	public void admin_restaurantResearch() {
-		System.out.println("\n[음식점 리뷰]");
-		String name;
-		
-		try {
-			System.out.print("검색할 음식점명 ? ");
-			name = br.readLine();
-			
-			if(name == null || name.trim().isEmpty()) {
-				System.out.println("이믈을 입력해주세요.\n");
-				return;
-			} 
-			
-			List<ReviewDTO> list = dao.admin_listReview(name);
-			boolean found = false;
-			for (ReviewDTO dto : list) {
-			    if (dto.getRestaurant_name().equals(name)) {
-			        found = true;
-			        break;
-			    }
-			}
-			if(!found) {
-				System.out.println("해당 음식점의 리뷰가 존재하지 않습니다.\n");
-			    return;
-			}
-			
-			title_admin_restaurantResearch();
-			
-			for(ReviewDTO dto : list) {
-				System.out.print(dto.getMember_id() + "\t");
-				System.out.print(dto.getReservation_id() + "\t");
-				System.out.print(dto.getRestaurant_name() + "\t");
-				System.out.print(dto.getReview_rating() + "\t");
-				System.out.print(dto.getReview_etccomment() + "\t\t");
-				System.out.println(dto.getReview_comment());
-			}	
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		System.out.println();
-	}
+        System.out.println("\n[음식점 리뷰]");
+        String name;
+        
+        try {
+            System.out.print("검색할 음식점명 ? ");
+            name = br.readLine();
+            
+            if(name == null || name.trim().isEmpty()) {
+                System.out.println("음식점명을 입력해주세요.\n");
+                return;
+            } 
+            
+            List<ReviewDTO> list = dao.admin_listReview(name);
+            boolean found = false;
+            for (ReviewDTO dto : list) {
+                if (dto.getRestaurant_name().equals(name)) {
+                    found = true;
+                    break;
+                }
+            }
+            if(!found) {
+                System.out.println("해당 음식점의 리뷰가 존재하지 않습니다.\n");
+                return;
+            }
+            
+            title_admin_restaurantResearch();
+            
+            for(ReviewDTO dto : list) {
+                System.out.print(dto.getMember_id() + "\t");
+                System.out.print(dto.getReservation_id() + "\t");
+                System.out.print(dto.getRestaurant_name() + "\t");
+                System.out.print(dto.getReview_rating() + "\t");
+                System.out.print((dto.getReview_etccomment() != null && !"null".equals(dto.getReview_etccomment()) ? dto.getReview_etccomment() : "") + "\t\t");
+                System.out.println((dto.getReview_comment() != null && !"null".equals(dto.getReview_comment()) ? dto.getReview_comment() : ""));
+            }    
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println();
+    }
 	
 // ------------------ 회원 음식점 검색
 	public void member_restaurantResearch() {
-		System.out.println("\n[음식점 리뷰]");
-		String name;
-		
-		try {
-			System.out.print("검색할 음식점명 ? ");
-			name = br.readLine();
-			
-			if(name == null) {
-				System.out.println("이믈을입력해주세요.\n");
-				return;
-			} 
-			
-			List<ReviewDTO> list = dao.admin_listReview(name);
-			boolean found = false;
-			for (ReviewDTO dto : list) {
-			    if (dto.getRestaurant_name().equals(name)) {
-			        found = true;
-			        break;
-			    }
-			}
-			if(!found) {
-				System.out.println("해당 음식점 또는 리뷰가 존재하지 않습니다.\n");
-			    return;
-			    
-			}
-			
-			title_member_restaurantResearch();
-			
-			System.out.println("------------------------------------------------------------------------");
-			
-			for(ReviewDTO dto : list) {
-				System.out.print(dto.getRestaurant_name() + "\t");
-				System.out.print(dto.getReview_rating() + "\t");
-				System.out.print(dto.getReview_etccomment() + "\t\t");
-				System.out.println(dto.getReview_comment());
-			}	
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		System.out.println();
-	}
+        System.out.println("\n[음식점 리뷰]");
+        String name;
+        
+        try {
+            System.out.print("검색할 음식점명 ? ");
+            name = br.readLine();
+            
+            if(name == null) {
+                System.out.println("음식점명을 입력해주세요.\n");
+                return;
+            } 
+            
+            List<ReviewDTO> list = dao.admin_listReview(name);
+            boolean found = false;
+            for (ReviewDTO dto : list) {
+                if (dto.getRestaurant_name().equals(name)) {
+                    found = true;
+                    break;
+                }
+            }
+            if(!found) {
+                System.out.println("해당 음식점 또는 리뷰가 존재하지 않습니다.\n");
+                return;
+                
+            }
+            
+            title_member_restaurantResearch();
+            
+            System.out.println("------------------------------------------------------------------------");
+            
+            for(ReviewDTO dto : list) {
+                System.out.print(dto.getRestaurant_name() + "\t");
+                System.out.print(dto.getReview_rating() + "\t");
+                System.out.print((dto.getReview_etccomment() != null && !"null".equals(dto.getReview_etccomment()) ? dto.getReview_etccomment() : "") + "\t\t");
+                System.out.println((dto.getReview_comment() != null && !"null".equals(dto.getReview_comment()) ? dto.getReview_comment() : ""));
+            }    
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println();
+    }
 	
 	public void title_member_restaurantResearch() {
 		System.out.print("음식점명" + "\t");
 		System.out.print("별점" + "\t");
-		System.out.print("기타코멘트" + "\t\t");
+		System.out.print("기타코멘트" + "\t\t\t\t\t");
 		System.out.println("리뷰댓글");
 	}
 	
 	public void title_admin_restaurantResearch() {
 		System.out.print("회원아이디" + "\t");
-		System.out.print("예약번호" + "\t");
+		System.out.print("예약코드" + "\t\t");
 		System.out.print("음식점명" + "\t");
 		System.out.print("별점" + "\t");
-		System.out.print("기타코멘트" + "\t\\t");
+		System.out.print("기타코멘트" + "\t\t\t\t\t");
 		System.out.println("리뷰댓글");
 	}
 	

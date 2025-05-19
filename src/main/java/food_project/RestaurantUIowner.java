@@ -46,7 +46,7 @@ public void listApprovedRestaurant() {
 		
 		List<RestaurantDTO> list = rdao.listApprovedRestaurant(id);
 		
-		System.out.print("음식점코드\t음식점이름\t음식점주소\t음식점번호\t승인여부\n");
+		System.out.print("음식점코드\t음식점명\t음식점주소\t음식점번호\t승인여부\n");
 		System.out.println("---------------------------------------------------");
 		
 		
@@ -71,10 +71,10 @@ public void insertRestaurant() {
 	RestaurantDTO dto = new RestaurantDTO();
 	
 	try {
-		System.out.print("음식점 코드 ? ");
+		System.out.print("음식점코드 ? ");
 		dto.setRestaurant_id(br.readLine());
 		
-		System.out.print("음식점 이름 ? ");
+		System.out.print("음식점명 ? ");
 		dto.setRestaurant_name(br.readLine());
 		
 		System.out.print("음식점 주소 ? ");
@@ -104,7 +104,7 @@ public void insertRestaurant() {
 		
 		
 		List<CategoryDTO> list = cdao.listCategory();
-		System.out.println("카테고리 코드\t카테고리 이름");
+		System.out.println("카테고리 코드\t카테고리명");
 		System.out.println("----------------------------");
 		for(CategoryDTO cdto : list) {
 			System.out.print(cdto.getCategory_id() + "\t\t");
@@ -145,14 +145,14 @@ public void updateRestaurant() {
         }
 
         System.out.println("[" + ownerId + "님 보유 음식점 목록]");
-        System.out.println("식당 번호\t\t식당 이름\t주소\t전화번호\t수용가능인원\t오픈시간\t마감시간\t허가여부\t점주아이디\t카테고리코드");
-        System.out.println("-------------------------");
+        System.out.println("음식점코드\t\t음식점명\t주소\t전화번호\t\t수용가능인원\t오픈시간\t마감시간\t허가여부\t점주아이디\t카테고리코드");
+        System.out.println("-----------------------------------------------------------------------------------------------");
         for (RestaurantDTO r : restaurants) {
             System.out.print(r.getRestaurant_id() + "\t\t");
             System.out.print(r.getRestaurant_name() + "\t");
             System.out.print(r.getRestaurant_address() + "\t");
-            System.out.print(r.getRestaurant_tel() + "\t\t");
-            System.out.print(r.getRestaurant_count() + "\t");
+            System.out.print(r.getRestaurant_tel() + "\t");
+            System.out.print(r.getRestaurant_count() + "\t\t");
             System.out.print(r.getOpening_time() + "\t");
             System.out.print(r.getClosing_time() + "\t");
             System.out.print(r.getRestaurant_approve() + "\t");
@@ -190,7 +190,7 @@ public void updateRestaurant() {
 	        }
 	        
 			
-			System.out.print("새로운 음식점 이름 ? ");
+			System.out.print("새로운 음식점명 ? ");
 			dto.setRestaurant_name(br.readLine());
 			
 			System.out.print("새로운 음식점 주소 ? ");

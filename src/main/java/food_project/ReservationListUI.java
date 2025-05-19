@@ -18,7 +18,7 @@ public class ReservationListUI {
 
 	protected void menu() {
 		int ch;
-		System.out.println("예약 목록 확인");
+		System.out.println("\n[예약 목록 확인]");
 		while (true) {
 			try {
 				System.out.print("1.이용한 예약 목록 2.이용 예정 예약 목록 3.뒤로가기 => ");
@@ -48,7 +48,7 @@ public class ReservationListUI {
 	}
 
 	public void reservationlist_use() {
-		System.out.println("[이용한 예약 목록]");
+		System.out.println("\n[이용한 예약 목록]");
 		member_ReviewUI mui = new member_ReviewUI(login);
 		
 		dao.updateExpiredReservations();
@@ -67,7 +67,7 @@ public class ReservationListUI {
 
 		int ch;
 
-		System.out.println("이용한 예약 목록");
+		System.out.println("\n[이용한 예약 목록]");
 		
 		while (true) {
 			try {
@@ -112,7 +112,7 @@ public class ReservationListUI {
 			}
 		}
 
-		System.out.println("이용 예정 예약 목록");
+		System.out.println("\n[이용 예정 예약 목록]");
 
 		while (true) {
 			try {
@@ -163,12 +163,12 @@ public class ReservationListUI {
 
 			// 예약번호가 유효할 때까지 계속해서 입력 받기
 			while (true) {
-				System.out.print("변경할 예약 번호를 고르시오 => ");
+				System.out.print("변경할 예약코드를 고르시오 (당일예약은 불가능합니다.) => ");
 				reservation_id = br.readLine();
 
 				// 예약 번호가 유효한지 확인
 				if (!dao.isValidReservation(reservation_id, member_Id)) {
-					System.out.println("입력한 예약 번호가 존재하지 않습니다. 다시 입력하세요.");
+					System.out.println("입력한 예약코드가 존재하지 않습니다. 다시 입력하세요.");
 				} else {
 					break; // 예약번호가 유효하면 반복문 종료
 				}
@@ -232,7 +232,7 @@ public class ReservationListUI {
 		}
 
 		try {
-			System.out.print("취소할 예약 번호를 고르시오 =>");
+			System.out.print("취소할 예약코드를 고르시오 => ");
 			reservation_id = br.readLine();
 
 			dao.deleteReservation(reservation_id);
@@ -252,8 +252,8 @@ public class ReservationListUI {
 	}
 
 	private void reservation_title() {
-		System.out.print("예약번호\t\t\t");
-		System.out.print("음식점 이름\t");
+		System.out.print("예약코드\t\t\t");
+		System.out.print("음식점명\t\t");
 		System.out.print("예약날짜\t\t");
 		System.out.print("예약시간\t\t");
 		System.out.println("예약인원");

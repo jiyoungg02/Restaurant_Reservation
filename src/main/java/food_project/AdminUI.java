@@ -48,7 +48,7 @@ public class AdminUI {
 		try {
 			List<RestaurantDTO> list = rdao.RestaurantRequests("N");
 			for(RestaurantDTO dto : list) {
-				System.out.println("음식점 코드 : " + dto.getRestaurant_id()+ " | " + " 음식점 이름 : " +dto.getRestaurant_name() + " | " 
+				System.out.println("음식점 코드 : " + dto.getRestaurant_id()+ " | " + " 음식점명 : " +dto.getRestaurant_name() + " | " 
 										+ " 허가 여부 : "  + dto.getRestaurant_approve());
 			}
 			
@@ -92,7 +92,7 @@ public class AdminUI {
 		try {
 			List<RestaurantDTO> list = rdao.RestaurantRequests("D");
 			for(RestaurantDTO dto : list) {
-				System.out.println("음식점 코드 : " + dto.getRestaurant_id()+ " | " + " 음식점 이름 : " +dto.getRestaurant_name() + " | " 
+				System.out.println("음식점 코드 : " + dto.getRestaurant_id()+ " | " + " 음식점명 : " +dto.getRestaurant_name() + " | " 
 										+ " 허가 여부 : "  + dto.getRestaurant_approve());
 			}
 
@@ -222,7 +222,7 @@ public class AdminUI {
 		
 		List<CategoryDTO> list = categorydao.listCategory();
 		
-		System.out.println("카테고리 아이디\t카테고리 이름");
+		System.out.println("카테고리 코드\t카테고리명");
 		System.out.println("----------------------------");
 		for(CategoryDTO dto : list) {
 			System.out.print(dto.getCategory_id() + "\t\t");
